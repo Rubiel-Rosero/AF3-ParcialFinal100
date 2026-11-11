@@ -1,16 +1,13 @@
 /**
- * Punto de entrada del Sistema de Gestion Academica y
- * Planificacion de Rutas de Aprendizaje.
- * <p>
- * Por ahora solo confirma que el proyecto compila. En el Bloque 10
- * aqui se construira el menu interactivo de 22 opciones.
- * </p>
- */
-public class Main {
-
-    public static void main(String[] args) {
+clase principal, aqui va a ir el menu con todas las opciones
+por ahora solo muestra el titulo para ver que compila
+*/
+public class Main
+{
+    public static void main(String[] args)
+    {
         System.out.println("============================================================");
-        System.out.println("  PLANIFICACION ACADEMICA - SISTEMA UNIVERSITARIO");
+        System.out.println("  PLANIFICACIÓN ACADÉMICA - SISTEMA UNIVERSITARIO");
         System.out.println("============================================================");
         System.out.println("Proyecto compilado correctamente.");
     }

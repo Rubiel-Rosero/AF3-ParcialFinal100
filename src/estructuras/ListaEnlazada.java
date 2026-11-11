@@ -1,231 +1,140 @@
 package estructuras;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
 /**
- * Lista enlazada simple implementada manualmente.
- * <p>
- * Se usa para los pre-requisitos de cada materia y para el historial
- * de materias cursadas de cada estudiante.
- * </p>
- * <p>
- * Guarda referencia al primer nodo ({@code cabeza}) y al ultimo
- * ({@code ultimo}) para que agregar al final sea O(1) y no haya que
- * recorrer toda la lista.
- * </p>
- * <p>
- * Implementa {@link Iterable} para poder recorrerla con
- * {@code for (T dato : lista)}. Iterable es solo una interfaz de Java:
- * el almacenamiento y el recorrido son nuestros.
- * </p>
- *
- * @param <T> tipo de los elementos
- */
-public class ListaEnlazada<T> implements Iterable<T> {
-
-    private Nodo<T> cabeza;
+lista enlazada hecha a mano
+se usa para los pre-requisitos de las materias y el historial del estudiante
+se guarda el primero y el ultimo para que agregar al final no tenga que recorrer toda la lista
+*/
+public class ListaEnlazada<T>
+{
+    private Nodo<T> primero;
     private Nodo<T> ultimo;
     private int tamanio;
-
-    /** Crea una lista vacia. */
-    public ListaEnlazada() {
-        cabeza = null;
+    public ListaEnlazada()
+    {
+        primero = null;
         ultimo = null;
         tamanio = 0;
     }
-
-    /**
-     * Agrega un elemento al final de la lista. Complejidad O(1).
-     *
-     * @param dato elemento a agregar
-     */
-    public void agregarAlFinal(T dato) {
-        Nodo<T> nuevoNodo = new Nodo<>(dato);
-        if (estaVacia()) {
-            cabeza = nuevoNodo;
-        } else {
-            ultimo.setSiguiente(nuevoNodo);
+    //agregar al final
+    public void agregarAlFinal(T dato)
+    {
+        Nodo<T> nuevo = new Nodo<>(dato);
+        if(estaVacia())
+        {
+            primero = nuevo;
         }
-        ultimo = nuevoNodo;
+        else
+        {
+            ultimo.setSiguiente(nuevo);
+        }
+        ultimo = nuevo;
         tamanio++;
     }
-
-    /**
-     * Agrega un elemento al inicio de la lista. Complejidad O(1).
-     *
-     * @param dato elemento a agregar
-     */
-    public void agregarAlInicio(T dato) {
-        Nodo<T> nuevoNodo = new Nodo<>(dato);
-        nuevoNodo.setSiguiente(cabeza);
-        cabeza = nuevoNodo;
-        if (ultimo == null) {
-            ultimo = nuevoNodo;
+    //agregar al inicio
+    public void agregarAlInicio(T dato)
+    {
+        Nodo<T> nuevo = new Nodo<>(dato);
+        nuevo.setSiguiente(primero);
+        primero = nuevo;
+        if(ultimo == null)
+        {
+            ultimo = nuevo;
         }
         tamanio++;
     }
-
-    /**
-     * Devuelve el elemento en la posicion indicada. Complejidad O(n).
-     *
-     * @param indice posicion empezando en 0
-     * @return el elemento en esa posicion
-     * @throws IndexOutOfBoundsException si el indice no existe
-     */
-    public T obtener(int indice) {
-        validarIndice(indice);
-        Nodo<T> actual = cabeza;
-        for (int posicion = 0; posicion < indice; posicion++) {
+    //obtener el dato de una posicion, empieza en 0
+    public T obtener(int posicion)
+    {
+        if(posicion < 0 || posicion >= tamanio)
+        {
+            throw new IndexOutOfBoundsException("Posición inválida: " + posicion);
+        }
+        Nodo<T> actual = primero;
+        for(int i = 0; i < posicion; i++)
+        {
             actual = actual.getSiguiente();
         }
         return actual.getDato();
     }
-
-    /**
-     * Indica si la lista contiene un elemento (compara con equals). O(n).
-     *
-     * @param dato elemento buscado
-     * @return true si esta en la lista
-     */
-    public boolean contiene(T dato) {
-        Nodo<T> actual = cabeza;
-        while (actual != null) {
-            if (sonIguales(actual.getDato(), dato)) {
+    //buscar si un dato esta en la lista
+    public boolean contiene(T dato)
+    {
+        Nodo<T> actual = primero;
+        while(actual != null)
+        {
+            if(actual.getDato().equals(dato))
+            {
                 return true;
             }
             actual = actual.getSiguiente();
         }
         return false;
     }
-
-    /**
-     * Elimina la primera aparicion del elemento. O(n).
-     * <p>
-     * Idea clave: para "sacar" un nodo, el nodo anterior pasa a apuntar
-     * al siguiente del eliminado. El eliminado queda sin referencias y el
-     * recolector de basura de Java lo libera.
-     * </p>
-     *
-     * @param dato elemento a eliminar
-     * @return true si se encontro y elimino
-     */
-    public boolean eliminar(T dato) {
+    //eliminar un dato
+    //el nodo anterior pasa a apuntar al siguiente del que se borra, asi se lo salta
+    public boolean eliminar(T dato)
+    {
         Nodo<T> anterior = null;
-        Nodo<T> actual = cabeza;
-
-        while (actual != null && !sonIguales(actual.getDato(), dato)) {
+        Nodo<T> actual = primero;
+        while(actual != null && !actual.getDato().equals(dato))
+        {
             anterior = actual;
             actual = actual.getSiguiente();
         }
-
-        if (actual == null) {
-            return false;
+        if(actual == null)
+        {
+            return false; //no estaba
         }
-
-        desenlazar(anterior, actual);
+        if(anterior == null)
+        {
+            primero = actual.getSiguiente(); //era el primero
+        }
+        else
+        {
+            anterior.setSiguiente(actual.getSiguiente());
+        }
+        if(actual == ultimo)
+        {
+            ultimo = anterior; //era el ultimo
+        }
+        tamanio--;
         return true;
     }
-
-    /**
-     * Elimina el elemento en la posicion indicada. O(n).
-     *
-     * @param indice posicion empezando en 0
-     * @return el elemento eliminado
-     * @throws IndexOutOfBoundsException si el indice no existe
-     */
-    public T eliminarEn(int indice) {
-        validarIndice(indice);
-        Nodo<T> anterior = null;
-        Nodo<T> actual = cabeza;
-        for (int posicion = 0; posicion < indice; posicion++) {
-            anterior = actual;
-            actual = actual.getSiguiente();
-        }
-        desenlazar(anterior, actual);
-        return actual.getDato();
-    }
-
-    /** Elimina todos los elementos. */
-    public void vaciar() {
-        cabeza = null;
+    //borrar todo
+    public void vaciar()
+    {
+        primero = null;
         ultimo = null;
         tamanio = 0;
     }
-
-    public int tamanio() {
+    //para recorrerla desde afuera con un while
+    public Nodo<T> getPrimero()
+    {
+        return primero;
+    }
+    public int tamanio()
+    {
         return tamanio;
     }
-
-    public boolean estaVacia() {
+    public boolean estaVacia()
+    {
         return tamanio == 0;
     }
-
-    /**
-     * Saca {@code actual} de la cadena. Cubre los tres casos:
-     * eliminar la cabeza, uno del medio o el ultimo.
-     */
-    private void desenlazar(Nodo<T> anterior, Nodo<T> actual) {
-        if (anterior == null) {
-            cabeza = actual.getSiguiente();          // era la cabeza
-        } else {
-            anterior.setSiguiente(actual.getSiguiente()); // "saltar" el nodo
-        }
-        if (actual == ultimo) {
-            ultimo = anterior;                        // era el ultimo
-        }
-        tamanio--;
-    }
-
-    private void validarIndice(int indice) {
-        if (indice < 0 || indice >= tamanio) {
-            throw new IndexOutOfBoundsException(
-                "Indice " + indice + " fuera de rango (tamanio " + tamanio + ")");
-        }
-    }
-
-    /** Compara dos datos permitiendo valores null. */
-    private boolean sonIguales(T primero, T segundo) {
-        return primero == null ? segundo == null : primero.equals(segundo);
-    }
-
-    /**
-     * Permite recorrer la lista con for-each, avanzando nodo por nodo.
-     */
     @Override
-    public Iterator<T> iterator() {
-        return new Iterator<T>() {
-            private Nodo<T> actual = cabeza;
-
-            @Override
-            public boolean hasNext() {
-                return actual != null;
-            }
-
-            @Override
-            public T next() {
-                if (actual == null) {
-                    throw new NoSuchElementException();
-                }
-                T dato = actual.getDato();
-                actual = actual.getSiguiente();
-                return dato;
-            }
-        };
-    }
-
-    /** Muestra la lista como [a -> b -> c]. */
-    @Override
-    public String toString() {
-        StringBuilder texto = new StringBuilder("[");
-        Nodo<T> actual = cabeza;
-        while (actual != null) {
-            texto.append(actual.getDato());
-            if (actual.getSiguiente() != null) {
-                texto.append(" -> ");
+    public String toString()
+    {
+        String texto = "[";
+        Nodo<T> actual = primero;
+        while(actual != null)
+        {
+            texto += actual.getDato();
+            if(actual.getSiguiente() != null)
+            {
+                texto += " -> ";
             }
             actual = actual.getSiguiente();
         }
-        return texto.append("]").toString();
+        return texto + "]";
     }
 }

@@ -1,99 +1,76 @@
 package estructuras;
 
 /**
- * Pila (LIFO: el ultimo en entrar es el primero en salir) implementada
- * manualmente con nodos enlazados.
- * <p>
- * Se usa para deshacer/rehacer operaciones y para navegar entre reportes.
- * </p>
- * <p>
- * Solo se necesita una referencia al {@code tope}: apilar pone un nodo
- * nuevo encima y desapilar quita el de encima. Ambas son O(1) porque
- * nunca se recorre la pila.
- * </p>
- *
- * @param <T> tipo de los elementos
- */
-public class Pila<T> {
-
+pila hecha a mano con nodos (el ultimo que entra es el primero que sale)
+se usa para deshacer/rehacer y para navegar entre reportes
+solo se guarda el tope, por eso apilar y desapilar no recorren nada
+*/
+public class Pila<T>
+{
     private Nodo<T> tope;
     private int tamanio;
-
-    /** Crea una pila vacia. */
-    public Pila() {
+    public Pila()
+    {
         tope = null;
         tamanio = 0;
     }
-
-    /**
-     * Pone un elemento encima de la pila (push). O(1).
-     *
-     * @param dato elemento a apilar
-     */
-    public void apilar(T dato) {
-        Nodo<T> nuevoNodo = new Nodo<>(dato);
-        nuevoNodo.setSiguiente(tope);
-        tope = nuevoNodo;
+    //poner encima
+    public void apilar(T dato)
+    {
+        Nodo<T> nuevo = new Nodo<>(dato);
+        nuevo.setSiguiente(tope);
+        tope = nuevo;
         tamanio++;
     }
-
-    /**
-     * Quita y devuelve el elemento de encima (pop). O(1).
-     *
-     * @return el elemento que estaba en el tope
-     * @throws IllegalStateException si la pila esta vacia
-     */
-    public T desapilar() {
-        verificarNoVacia();
+    //sacar el de encima
+    public T desapilar()
+    {
+        if(estaVacia())
+        {
+            throw new IllegalStateException("La pila está vacía");
+        }
         T dato = tope.getDato();
         tope = tope.getSiguiente();
         tamanio--;
         return dato;
     }
-
-    /**
-     * Devuelve el elemento de encima sin quitarlo (peek). O(1).
-     *
-     * @return el elemento en el tope
-     * @throws IllegalStateException si la pila esta vacia
-     */
-    public T verTope() {
-        verificarNoVacia();
+    //ver el de encima sin sacarlo
+    public T verTope()
+    {
+        if(estaVacia())
+        {
+            throw new IllegalStateException("La pila está vacía");
+        }
         return tope.getDato();
     }
-
-    /** Elimina todos los elementos (se usa para limpiar la pila de rehacer). */
-    public void vaciar() {
+    //borrar todo (se usa para limpiar la pila de rehacer)
+    public void vaciar()
+    {
         tope = null;
         tamanio = 0;
     }
-
-    public boolean estaVacia() {
+    public boolean estaVacia()
+    {
         return tope == null;
     }
-
-    public int tamanio() {
+    public int tamanio()
+    {
         return tamanio;
     }
-
-    private void verificarNoVacia() {
-        if (estaVacia()) {
-            throw new IllegalStateException("La pila esta vacia");
-        }
-    }
-
-    /** Muestra la pila desde el tope: [tope | ... | fondo]. */
     @Override
-    public String toString() {
-        StringBuilder texto = new StringBuilder("[");
+    public String toString()
+    {
+        String texto = "[";
         Nodo<T> actual = tope;
-        while (actual != null) {
-            texto.append(actual.getDato());
-            if (actual.getSiguiente() != null) {
-                texto.append(" | ");
+        while(actual != null)
+        {
+            texto += actual.getDato();
+            if(actual.getSiguiente() != null)
+            {
+                texto += " | ";
             }
             actual = actual.getSiguiente();
         }
-        return texto.append("]").toString();
+        return texto + "]";
     }
 }

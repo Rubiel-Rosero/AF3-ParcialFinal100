@@ -1,14 +1,12 @@
 package excepciones;
 
 /**
- * Se lanza cuando se busca un ID de estudiante que no existe en el sistema.
- */
-public class EstudianteNoEncontradoException extends SistemaAcademicoException {
-
-    /**
-     * @param mensaje explicacion del error
-     */
-    public EstudianteNoEncontradoException(String mensaje) {
+cuando se busca un id de estudiante que no existe
+*/
+public class EstudianteNoEncontradoException extends SistemaAcademicoException
+{
+    public EstudianteNoEncontradoException(String mensaje)
+    {
         super(mensaje);
     }
 }

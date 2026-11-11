@@ -1,14 +1,12 @@
 package excepciones;
 
 /**
- * Se lanza cuando se intenta sacar un estudiante de una cola de espera sin elementos.
- */
-public class ColaDeEsperaVaciaException extends SistemaAcademicoException {
-
-    /**
-     * @param mensaje explicacion del error
-     */
-    public ColaDeEsperaVaciaException(String mensaje) {
+cuando se quiere sacar a alguien de la cola de espera y no hay nadie
+*/
+public class ColaDeEsperaVaciaException extends SistemaAcademicoException
+{
+    public ColaDeEsperaVaciaException(String mensaje)
+    {
         super(mensaje);
     }
 }

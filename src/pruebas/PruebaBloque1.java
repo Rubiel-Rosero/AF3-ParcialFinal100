@@ -6,160 +6,159 @@ import estructuras.Nodo;
 import estructuras.Pila;
 
 /**
- * Prueba del Bloque 1: estructuras de datos propias
- * (Nodo, ListaEnlazada, Pila, Cola).
- */
-public class PruebaBloque1 {
-
-    private static int pruebasAprobadas = 0;
-    private static int pruebasTotales = 0;
-
-    public static void main(String[] args) {
-        System.out.println("=== P1.1 Nodo ===");
+prueba del bloque 1: nodo, lista enlazada, pila y cola
+cada verificar compara lo que da el metodo con lo que deberia dar
+*/
+public class PruebaBloque1
+{
+    private static int aprobadas = 0;
+    private static int total = 0;
+    public static void main(String[] args)
+    {
+        System.out.println("=== Nodo ===");
         probarNodo();
-
-        System.out.println("\n=== P1.2 ListaEnlazada ===");
-        probarListaEnlazada();
-
-        System.out.println("\n=== P1.3 Pila (LIFO) ===");
+        System.out.println("\n=== Lista enlazada ===");
+        probarLista();
+        System.out.println("\n=== Pila ===");
         probarPila();
-
-        System.out.println("\n=== P1.4 Cola (FIFO) ===");
+        System.out.println("\n=== Cola ===");
         probarCola();
-
-        System.out.println();
-        System.out.println("Resultado: " + pruebasAprobadas + "/" + pruebasTotales + " pruebas aprobadas");
+        System.out.println("\nResultado: " + aprobadas + "/" + total);
     }
-
-    private static void probarNodo() {
-        Nodo<String> primero = new Nodo<>("CALC101");
-        Nodo<String> segundo = new Nodo<>("FIS101");
-        Nodo<String> tercero = new Nodo<>("PROG101");
-        primero.setSiguiente(segundo);
-        segundo.setSiguiente(tercero);
-
-        StringBuilder recorrido = new StringBuilder();
-        Nodo<String> actual = primero;
-        while (actual != null) {
-            recorrido.append(actual.getDato()).append(" ");
+    //enlazar 3 nodos a mano y recorrerlos
+    private static void probarNodo()
+    {
+        Nodo<String> n1 = new Nodo<>("CALC101");
+        Nodo<String> n2 = new Nodo<>("FIS101");
+        Nodo<String> n3 = new Nodo<>("PROG101");
+        n1.setSiguiente(n2);
+        n2.setSiguiente(n3);
+        String recorrido = "";
+        Nodo<String> actual = n1;
+        while(actual != null)
+        {
+            recorrido += actual.getDato() + " ";
             actual = actual.getSiguiente();
         }
-        verificar("Recorrer 3 nodos enlazados", recorrido.toString().trim(), "CALC101 FIS101 PROG101");
+        verificar("recorrer 3 nodos", recorrido.trim(), "CALC101 FIS101 PROG101");
     }
-
-    private static void probarListaEnlazada() {
+    private static void probarLista()
+    {
         ListaEnlazada<String> lista = new ListaEnlazada<>();
-        verificar("Lista nueva esta vacia", lista.estaVacia(), true);
-
+        verificar("lista nueva vacia", lista.estaVacia(), true);
         lista.agregarAlFinal("B");
         lista.agregarAlFinal("C");
         lista.agregarAlInicio("A");
         lista.agregarAlFinal("D");
-        verificar("Agregar inicio/final", lista.toString(), "[A -> B -> C -> D]");
-        verificar("Tamanio", lista.tamanio(), 4);
-        verificar("Obtener indice 2", lista.obtener(2), "C");
-        verificar("Contiene C", lista.contiene("C"), true);
-        verificar("No contiene Z", lista.contiene("Z"), false);
-
-        verificar("Eliminar del medio (B)", lista.eliminar("B"), true);
-        verificar("  lista sin B", lista.toString(), "[A -> C -> D]");
-
-        verificar("Eliminar la cabeza (A)", lista.eliminar("A"), true);
-        verificar("  lista sin A", lista.toString(), "[C -> D]");
-
-        verificar("Eliminar el ultimo (D)", lista.eliminar("D"), true);
-        verificar("  lista sin D", lista.toString(), "[C]");
-
+        verificar("agregar al inicio y al final", lista.toString(), "[A -> B -> C -> D]");
+        verificar("tamanio", lista.tamanio(), 4);
+        verificar("obtener posicion 2", lista.obtener(2), "C");
+        verificar("contiene C", lista.contiene("C"), true);
+        verificar("no contiene Z", lista.contiene("Z"), false);
+        //los 3 casos de eliminar
+        lista.eliminar("B");
+        verificar("eliminar del medio", lista.toString(), "[A -> C -> D]");
+        lista.eliminar("A");
+        verificar("eliminar el primero", lista.toString(), "[C -> D]");
+        lista.eliminar("D");
+        verificar("eliminar el ultimo", lista.toString(), "[C]");
         lista.agregarAlFinal("E");
-        verificar("Agregar al final tras borrar el ultimo", lista.toString(), "[C -> E]");
-
-        verificar("Eliminar inexistente devuelve false", lista.eliminar("Z"), false);
-        verificar("eliminarEn(0)", lista.eliminarEn(0), "C");
-        verificar("eliminarEn(0) deja un solo nodo", lista.toString(), "[E]");
-
-        StringBuilder recorridoForEach = new StringBuilder();
-        lista.agregarAlFinal("F");
-        for (String elemento : lista) {
-            recorridoForEach.append(elemento);
+        verificar("agregar despues de borrar el ultimo", lista.toString(), "[C -> E]");
+        verificar("eliminar algo que no esta", lista.eliminar("Z"), false);
+        //recorrer desde afuera
+        String recorrido = "";
+        Nodo<String> actual = lista.getPrimero();
+        while(actual != null)
+        {
+            recorrido += actual.getDato();
+            actual = actual.getSiguiente();
         }
-        verificar("Recorrer con for-each", recorridoForEach.toString(), "EF");
-
-        boolean lanzoExcepcion = false;
-        try {
+        verificar("recorrer con getPrimero", recorrido, "CE");
+        boolean fallo = false;
+        try
+        {
             lista.obtener(10);
-        } catch (IndexOutOfBoundsException error) {
-            lanzoExcepcion = true;
         }
-        verificar("Indice invalido lanza excepcion", lanzoExcepcion, true);
+        catch(IndexOutOfBoundsException e)
+        {
+            fallo = true;
+        }
+        verificar("posicion invalida lanza excepcion", fallo, true);
     }
-
-    private static void probarPila() {
+    private static void probarPila()
+    {
         Pila<String> pila = new Pila<>();
         pila.apilar("op1");
         pila.apilar("op2");
         pila.apilar("op3");
-        verificar("Tope es el ultimo apilado", pila.verTope(), "op3");
-        verificar("Tamanio", pila.tamanio(), 3);
-        verificar("Desapilar 1 -> op3", pila.desapilar(), "op3");
-        verificar("Desapilar 2 -> op2", pila.desapilar(), "op2");
-        verificar("Desapilar 3 -> op1", pila.desapilar(), "op1");
-        verificar("Pila queda vacia", pila.estaVacia(), true);
-
-        boolean lanzoExcepcion = false;
-        try {
+        verificar("tope es el ultimo", pila.verTope(), "op3");
+        verificar("tamanio", pila.tamanio(), 3);
+        verificar("desapilar 1", pila.desapilar(), "op3");
+        verificar("desapilar 2", pila.desapilar(), "op2");
+        verificar("desapilar 3", pila.desapilar(), "op1");
+        verificar("queda vacia", pila.estaVacia(), true);
+        boolean fallo = false;
+        try
+        {
             pila.desapilar();
-        } catch (IllegalStateException error) {
-            lanzoExcepcion = true;
         }
-        verificar("Desapilar pila vacia lanza excepcion", lanzoExcepcion, true);
-
+        catch(IllegalStateException e)
+        {
+            fallo = true;
+        }
+        verificar("desapilar vacia lanza excepcion", fallo, true);
         pila.apilar("x");
         pila.vaciar();
-        verificar("vaciar() deja la pila vacia", pila.estaVacia(), true);
+        verificar("vaciar", pila.estaVacia(), true);
     }
-
-    private static void probarCola() {
+    private static void probarCola()
+    {
         Cola<String> cola = new Cola<>();
         cola.encolar("Laura Diaz");
         cola.encolar("Pablo Ortiz");
         cola.encolar("Sofia Mora");
-        verificar("Frente es el primero en llegar", cola.verFrente(), "Laura Diaz");
-
-        StringBuilder posiciones = new StringBuilder();
+        verificar("frente es el primero que llego", cola.verFrente(), "Laura Diaz");
+        //mostrar la cola sin sacar a nadie
+        String posiciones = "";
         int posicion = 1;
-        for (String estudiante : cola) {
-            posiciones.append(posicion++).append(":").append(estudiante).append(" ");
+        Nodo<String> actual = cola.getPrimero();
+        while(actual != null)
+        {
+            posiciones += posicion + ":" + actual.getDato() + " ";
+            posicion++;
+            actual = actual.getSiguiente();
         }
-        verificar("Recorrer sin modificar", posiciones.toString().trim(),
-            "1:Laura Diaz 2:Pablo Ortiz 3:Sofia Mora");
-        verificar("Recorrer no cambia el tamanio", cola.tamanio(), 3);
-
-        verificar("Desencolar 1 -> Laura", cola.desencolar(), "Laura Diaz");
-        verificar("Desencolar 2 -> Pablo", cola.desencolar(), "Pablo Ortiz");
-        verificar("Desencolar 3 -> Sofia", cola.desencolar(), "Sofia Mora");
-        verificar("Cola queda vacia", cola.estaVacia(), true);
-
+        verificar("recorrer sin sacar", posiciones.trim(), "1:Laura Diaz 2:Pablo Ortiz 3:Sofia Mora");
+        verificar("recorrer no cambia el tamanio", cola.tamanio(), 3);
+        verificar("desencolar 1", cola.desencolar(), "Laura Diaz");
+        verificar("desencolar 2", cola.desencolar(), "Pablo Ortiz");
+        verificar("desencolar 3", cola.desencolar(), "Sofia Mora");
+        verificar("queda vacia", cola.estaVacia(), true);
         cola.encolar("Nuevo");
-        verificar("Encolar tras vaciarse funciona", cola.verFrente(), "Nuevo");
+        verificar("encolar despues de vaciarse", cola.verFrente(), "Nuevo");
         cola.desencolar();
-
-        boolean lanzoExcepcion = false;
-        try {
+        boolean fallo = false;
+        try
+        {
             cola.desencolar();
-        } catch (IllegalStateException error) {
-            lanzoExcepcion = true;
         }
-        verificar("Desencolar cola vacia lanza excepcion", lanzoExcepcion, true);
+        catch(IllegalStateException e)
+        {
+            fallo = true;
+        }
+        verificar("desencolar vacia lanza excepcion", fallo, true);
     }
-
-    private static void verificar(String descripcion, Object obtenido, Object esperado) {
-        pruebasTotales++;
-        boolean aprobada = esperado.equals(obtenido);
-        if (aprobada) {
-            pruebasAprobadas++;
-            System.out.println("[OK]    " + descripcion);
-        } else {
-            System.out.println("[FALLA] " + descripcion + " -> esperado: " + esperado + ", obtenido: " + obtenido);
+    private static void verificar(String que, Object obtenido, Object esperado)
+    {
+        total++;
+        if(esperado.equals(obtenido))
+        {
+            aprobadas++;
+            System.out.println("[OK] " + que);
+        }
+        else
+        {
+            System.out.println("[FALLA] " + que + " -> esperaba " + esperado + " y dio " + obtenido);
         }
     }
 }

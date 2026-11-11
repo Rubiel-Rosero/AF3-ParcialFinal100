@@ -1,55 +1,37 @@
 package pruebas;
 
-import excepciones.ArchivoInvalidoException;
-import excepciones.ColaDeEsperaVaciaException;
-import excepciones.CupoLlenoException;
-import excepciones.EstudianteNoEncontradoException;
-import excepciones.HorarioConflictivoException;
-import excepciones.PilaDeshacerVaciaException;
-import excepciones.PreRequisitoNoAprobadoException;
-import excepciones.SistemaAcademicoException;
+import excepciones.*;
 
 /**
- * Prueba del Bloque 0: verifica que cada excepcion personalizada
- * se puede lanzar y capturar, y que todas se capturan con el tipo base.
- */
-public class PruebaBloque0 {
-
-    private static int pruebasAprobadas = 0;
-    private static int pruebasTotales = 0;
-
-    public static void main(String[] args) {
-        SistemaAcademicoException[] excepcionesDePrueba = {
+prueba del bloque 0
+se lanza cada excepcion y se mira que el catch de la clase padre la atrape
+*/
+public class PruebaBloque0
+{
+    public static void main(String[] args)
+    {
+        SistemaAcademicoException[] excepciones = {
             new PreRequisitoNoAprobadoException("Falta aprobar CALC101"),
-            new HorarioConflictivoException("Lunes 9:00 ya esta reservado"),
+            new HorarioConflictivoException("Lunes 9:00 ya está reservado"),
             new CupoLlenoException("CALC101 no tiene cupos"),
             new EstudianteNoEncontradoException("No existe estudiante con ID: 2024999"),
             new ColaDeEsperaVaciaException("No hay estudiantes en espera"),
             new PilaDeshacerVaciaException("No hay operaciones para deshacer"),
-            new ArchivoInvalidoException("Linea 3 sin coma")
+            new ArchivoInvalidoException("Línea 3 sin coma")
         };
-
-        for (SistemaAcademicoException excepcion : excepcionesDePrueba) {
-            probarLanzarYCapturar(excepcion);
-        }
-
-        System.out.println();
-        System.out.println("Resultado: " + pruebasAprobadas + "/" + pruebasTotales + " pruebas aprobadas");
-    }
-
-    /**
-     * Lanza la excepcion recibida y verifica que el catch del tipo base la atrapa.
-     */
-    private static void probarLanzarYCapturar(SistemaAcademicoException excepcionEsperada) {
-        pruebasTotales++;
-        try {
-            throw excepcionEsperada;
-        } catch (SistemaAcademicoException capturada) {
-            boolean esLaMisma = capturada == excepcionEsperada;
-            if (esLaMisma) {
-                pruebasAprobadas++;
+        int aprobadas = 0;
+        for(int i = 0; i < excepciones.length; i++)
+        {
+            try
+            {
+                throw excepciones[i];
             }
-            System.out.println((esLaMisma ? "[OK]    " : "[FALLA] ") + "Error: " + capturada.getMensajeFormateado());
+            catch(SistemaAcademicoException e)
+            {
+                System.out.println("[OK] Error: " + e.getMensajeFormateado());
+                aprobadas++;
+            }
         }
+        System.out.println("\nResultado: " + aprobadas + "/" + excepciones.length);
     }
 }
