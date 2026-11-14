@@ -1,7 +1,10 @@
 package modelo;
 
+import estructuras.Nodo;
+import excepciones.CupoLlenoException;
 import excepciones.DatoInvalidoException;
 import excepciones.EstudianteNoEncontradoException;
+import excepciones.PreRequisitoNoAprobadoException;
 import java.util.HashMap;
 
 /**
@@ -16,8 +19,9 @@ public class Universidad
     private Facultad[] facultades = new Facultad[MAX_FACULTADES];
     private int cantidadFacultades = 0;
     private HashMap<String, Estudiante> estudiantes = new HashMap<>();
+    private HashMap<String, Materia> materias = new HashMap<>();
 
-    // ===================== ESTUDIANTES =====================
+    // estudiantes
 
     //registrar: el id no se puede repetir porque es la clave del mapa
     public void registrarEstudiante(Estudiante estudiante) throws DatoInvalidoException
@@ -40,14 +44,19 @@ public class Universidad
     }
     //baja definitiva: remove devuelve el estudiante que saco
     //se devuelve para que deshacer (bloque 8) lo pueda volver a meter
-    public Estudiante eliminarEstudiante(String id) throws EstudianteNoEncontradoException
+    //no se deja eliminar a alguien inscrito o en espera: primero hay que cancelar,
+    //si no quedaria un estudiante "fantasma" ocupando un cupo
+    public Estudiante eliminarEstudiante(String id) throws EstudianteNoEncontradoException, DatoInvalidoException
     {
-        Estudiante eliminado = estudiantes.remove(id.trim());
-        if(eliminado == null)
+        Estudiante estudiante = buscarEstudiante(id);
+        for(Materia m : materias.values())
         {
-            throw new EstudianteNoEncontradoException("No existe estudiante con ID: " + id.trim());
+            if(m.estaInscrito(estudiante) || m.estaEnEspera(estudiante))
+            {
+                throw new DatoInvalidoException(estudiante.getNombre() + " sigue en " + m.getCodigo() + ". Cancele primero la inscripción");
+            }
         }
-        return eliminado;
+        return estudiantes.remove(estudiante.getId());
     }
     //lo usa deshacer: vuelve a meter un estudiante eliminado, con sus notas y todo
     public void restaurarEstudiante(Estudiante estudiante)
@@ -86,6 +95,102 @@ public class Universidad
     public boolean existeEstudiante(String id)
     {
         return estudiantes.containsKey(id.trim());
+    }
+
+    // Materias
+
+    public void crearMateria(Materia materia) throws DatoInvalidoException
+    {
+        if(materias.containsKey(materia.getCodigo()))
+        {
+            throw new DatoInvalidoException("Ya existe la materia " + materia.getCodigo());
+        }
+        materias.put(materia.getCodigo(), materia);
+    }
+    public Materia buscarMateria(String codigo) throws DatoInvalidoException
+    {
+        Materia encontrada = materias.get(codigo.trim().toUpperCase());
+        if(encontrada == null)
+        {
+            throw new DatoInvalidoException("No existe la materia " + codigo.trim().toUpperCase());
+        }
+        return encontrada;
+    }
+    public void agregarPrerrequisito(String codigoMateria, String codigoPrerrequisito) throws DatoInvalidoException
+    {
+        Materia materia = buscarMateria(codigoMateria);
+        Materia prerrequisito = buscarMateria(codigoPrerrequisito);
+        materia.agregarPrerrequisito(prerrequisito);
+    }
+    //devuelve true si quedo inscrito, false si quedo en la cola de espera
+    //aqui se atrapa la hija (CupoLleno) para tratarla distinto: no es error, es ir a la cola
+    public boolean inscribirEstudiante(String id, String codigoMateria) throws EstudianteNoEncontradoException, DatoInvalidoException, PreRequisitoNoAprobadoException
+    {
+        Estudiante estudiante = buscarEstudiante(id);
+        Materia materia = buscarMateria(codigoMateria);
+        try
+        {
+            materia.inscribir(estudiante);
+            return true;
+        }
+        catch(CupoLlenoException e)
+        {
+            materia.agregarAColaEspera(estudiante);
+            return false;
+        }
+    }
+    //devuelve a quien se le asigno el cupo liberado (el primero de la cola) o null
+    public Estudiante cancelarInscripcion(String id, String codigoMateria) throws EstudianteNoEncontradoException, DatoInvalidoException
+    {
+        Estudiante estudiante = buscarEstudiante(id);
+        Materia materia = buscarMateria(codigoMateria);
+        return materia.cancelarInscripcion(estudiante);
+    }
+    //igual que con estudiantes: del mapa a un arreglo y ordenado por codigo con insercion
+    public Materia[] listarMaterias()
+    {
+        Materia[] lista = new Materia[materias.size()];
+        int i = 0;
+        for(Materia m : materias.values())
+        {
+            lista[i] = m;
+            i++;
+        }
+        for(int j = 1; j < lista.length; j++)
+        {
+            Materia actual = lista[j];
+            int k = j - 1;
+            while(k >= 0 && lista[k].getCodigo().compareTo(actual.getCodigo()) > 0)
+            {
+                lista[k + 1] = lista[k];
+                k--;
+            }
+            lista[k + 1] = actual;
+        }
+        return lista;
+    }
+    //en que materias esta inscrito un estudiante (recorre la lista de inscritos de cada una)
+    public String materiasDeEstudiante(String id) throws EstudianteNoEncontradoException
+    {
+        Estudiante estudiante = buscarEstudiante(id);
+        String texto = "";
+        for(Materia m : listarMaterias())
+        {
+            Nodo<Estudiante> actual = m.getInscritos().getPrimero();
+            while(actual != null)
+            {
+                if(actual.getDato() == estudiante)
+                {
+                    texto += m + "\n";
+                }
+                actual = actual.getSiguiente();
+            }
+        }
+        return texto.isEmpty() ? estudiante.getNombre() + " no tiene materias inscritas" : texto.trim();
+    }
+    public int getCantidadMaterias()
+    {
+        return materias.size();
     }
 
     // ===================== FACULTADES =====================
