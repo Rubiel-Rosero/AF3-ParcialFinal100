@@ -4,14 +4,17 @@ import estructuras.Nodo;
 import excepciones.CupoLlenoException;
 import excepciones.DatoInvalidoException;
 import excepciones.EstudianteNoEncontradoException;
+import excepciones.HorarioConflictivoException;
 import excepciones.PreRequisitoNoAprobadoException;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 /**
 aqui va todo lo de la universidad
 - facultades: arreglo nativo Facultad[5] (tamaño fijo, casi nunca cambian)
 - estudiantes: HashMap con el id como clave, para buscar en O(1) sin recorrer
-en los siguientes bloques aqui tambien van a ir materias y aulas
+- materias: HashMap con el codigo como clave
+- aulas: TreeMap con el nombre como clave, para listarlas ordenadas
 */
 public class Universidad
 {
@@ -20,6 +23,9 @@ public class Universidad
     private int cantidadFacultades = 0;
     private HashMap<String, Estudiante> estudiantes = new HashMap<>();
     private HashMap<String, Materia> materias = new HashMap<>();
+    //TreeMap y no HashMap: las aulas se listan ordenadas por nombre sin tener que ordenar
+    //la clave es el nombre en mayusculas para que "aula 101" y "Aula 101" sean la misma
+    private TreeMap<String, Aula> aulas = new TreeMap<>();
 
     // estudiantes
 
@@ -191,6 +197,81 @@ public class Universidad
     public int getCantidadMaterias()
     {
         return materias.size();
+    }
+
+    // aulas y horarios
+
+    public void crearAula(Aula aula) throws DatoInvalidoException
+    {
+        String clave = aula.getNombre().toUpperCase();
+        if(aulas.containsKey(clave))
+        {
+            throw new DatoInvalidoException("Ya existe el aula " + aula.getNombre());
+        }
+        aulas.put(clave, aula);
+    }
+    //el TreeMap baja por el arbol comparando nombres: O(log n)
+    public Aula buscarAula(String nombre) throws DatoInvalidoException
+    {
+        Aula encontrada = aulas.get(nombre.trim().toUpperCase());
+        if(encontrada == null)
+        {
+            throw new DatoInvalidoException("No existe el aula " + nombre.trim());
+        }
+        return encontrada;
+    }
+    //values() de un TreeMap ya sale ordenado por la clave (nombre), no hay que ordenar
+    public Aula[] listarAulas()
+    {
+        Aula[] lista = new Aula[aulas.size()];
+        int i = 0;
+        for(Aula a : aulas.values())
+        {
+            lista[i] = a;
+            i++;
+        }
+        return lista;
+    }
+    //el enunciado tambien pide por capacidad: el TreeMap esta ordenado por nombre,
+    //entonces se copia a un arreglo y se ordena por capacidad (mayor a menor) con insercion
+    public Aula[] listarAulasPorCapacidad()
+    {
+        Aula[] lista = listarAulas();
+        for(int j = 1; j < lista.length; j++)
+        {
+            Aula actual = lista[j];
+            int k = j - 1;
+            while(k >= 0 && lista[k].getCapacidad() < actual.getCapacidad())
+            {
+                lista[k + 1] = lista[k];
+                k--;
+            }
+            lista[k + 1] = actual;
+        }
+        return lista;
+    }
+    //si viene codigo de materia, la materia tiene que existir
+    public void reservarHorario(String nombreAula, int dia, int hora, int duracion, String codigoMateria) throws DatoInvalidoException, HorarioConflictivoException
+    {
+        Aula aula = buscarAula(nombreAula);
+        String codigo = "-";
+        if(codigoMateria != null && !codigoMateria.trim().isEmpty())
+        {
+            codigo = buscarMateria(codigoMateria).getCodigo();
+        }
+        aula.reservar(dia, hora, duracion, codigo);
+    }
+    public void liberarHorario(String nombreAula, int dia, int hora, int duracion) throws DatoInvalidoException
+    {
+        buscarAula(nombreAula).liberar(dia, hora, duracion);
+    }
+    public void cambiarHorario(String nombreAula, int dia, int hora, int duracion, int nuevoDia, int nuevaHora) throws DatoInvalidoException, HorarioConflictivoException
+    {
+        buscarAula(nombreAula).cambiarHorario(dia, hora, duracion, nuevoDia, nuevaHora);
+    }
+    public int getCantidadAulas()
+    {
+        return aulas.size();
     }
 
     // ===================== FACULTADES =====================
