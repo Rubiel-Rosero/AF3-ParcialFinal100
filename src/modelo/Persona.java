@@ -4,8 +4,6 @@ import excepciones.DatoInvalidoException;
 
 /**
 clase padre de estudiante y profesor
-es abstracta porque no existe una "persona" suelta en el sistema,
-siempre es un estudiante o un profesor
 */
 public abstract class Persona
 {

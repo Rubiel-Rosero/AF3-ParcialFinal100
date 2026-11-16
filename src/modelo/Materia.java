@@ -9,10 +9,7 @@ import excepciones.DatoInvalidoException;
 import excepciones.PreRequisitoNoAprobadoException;
 
 /**
-una materia con sus cupos
-- prerrequisitos: lista enlazada (cada materia tiene una cantidad distinta y puede crecer)
-- inscritos: lista enlazada de los estudiantes que ya tienen cupo
-- colaEspera: cola, cuando la materia esta llena el primero que llega es el primero que entra
+una materia con sus cupos, creditos, prerrequisitos, inscritos y cola de espera
 */
 public class Materia
 {

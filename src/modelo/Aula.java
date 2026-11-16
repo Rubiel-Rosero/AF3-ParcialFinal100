@@ -4,11 +4,7 @@ import excepciones.DatoInvalidoException;
 import excepciones.HorarioConflictivoException;
 
 /**
-un aula con su horario semanal
-- horario: matriz boolean[7][24], fila = dia (0 domingo ... 6 sabado), columna = hora (0 a 23)
-  true = ocupada, false = libre. al crearla Java la llena de false: el aula arranca toda libre
-- reservadoPor: matriz paralela String[7][24] con el codigo de la materia que ocupa cada hora
-  (la misma idea de codigosMaterias en Estudiante)
+una aula con su horario semanal
 */
 public class Aula
 {
@@ -32,20 +28,18 @@ public class Aula
         this.nombre = nombre.trim();
         this.capacidad = capacidad;
     }
-    //una sola casilla: O(1)
+    //una sola casilla: O(1) osea constante, no depende de la cantidad de dias ni horas
     public boolean consultarDisponibilidad(int dia, int hora) throws DatoInvalidoException
     {
         validarCasilla(dia, hora);
         return !horario[dia][hora];
     }
-    //sin codigo de materia (como lo pide el enunciado)
+    //sin codigo de materia
     public void reservar(int dia, int hora, int duracion) throws DatoInvalidoException, HorarioConflictivoException
     {
         reservar(dia, hora, duracion, "-");
     }
     //sobrecarga: con el codigo de la materia que va a ocupar el aula
-    //primero se REVISAN todas las horas y despues se MARCAN todas
-    //si se marcara mientras se revisa, un choque en la segunda hora dejaria la primera reservada a medias
     public void reservar(int dia, int hora, int duracion, String codigoMateria) throws DatoInvalidoException, HorarioConflictivoException
     {
         validarRango(dia, hora, duracion);
@@ -53,7 +47,7 @@ public class Aula
         {
             if(horario[dia][h])
             {
-                throw new HorarioConflictivoException(NOMBRES_DIAS[dia] + " " + h + ":00 ya está reservado por " + reservadoPor[dia][h]);
+                throw new HorarioConflictivoException(NOMBRES_DIAS[dia] + " " + h + ":00 ya está reservado" + porQuien(dia, h));
             }
         }
         for(int h = hora; h < hora + duracion; h++)
@@ -79,7 +73,7 @@ public class Aula
             reservadoPor[dia][h] = null;
         }
     }
-    //mover una clase a otro dia/hora (lo va a usar deshacer en el bloque 8)
+    //mover una clase a otro dia/hora
     //si el nuevo horario choca, se vuelve a dejar el viejo como estaba
     public void cambiarHorario(int dia, int hora, int duracion, int nuevoDia, int nuevaHora) throws DatoInvalidoException, HorarioConflictivoException
     {
@@ -100,18 +94,17 @@ public class Aula
             throw e;
         }
     }
-    //texto como en el ejemplo 4: "Lunes 8:00 -> LIBRE"
     public String verificarDisponibilidad(int dia, int hora, int duracion) throws DatoInvalidoException
     {
         validarRango(dia, hora, duracion);
         String texto = "";
         for(int h = hora; h < hora + duracion; h++)
         {
-            texto += NOMBRES_DIAS[dia] + " " + h + ":00 -> " + (horario[dia][h] ? "OCUPADO (" + reservadoPor[dia][h] + ")" : "LIBRE") + "\n";
+            texto += NOMBRES_DIAS[dia] + " " + h + ":00 -> " + (horario[dia][h] ? "OCUPADO" + porQuien(dia, h) : "LIBRE") + "\n";
         }
         return texto.trim();
     }
-    //recorre una fila de la matriz: las 24 horas de un dia
+    //recorre una fila de la matriz osea las 24 horas de un dia
     public String horarioDelDia(int dia) throws DatoInvalidoException
     {
         validarCasilla(dia, 0);
@@ -121,13 +114,13 @@ public class Aula
         {
             if(horario[dia][h])
             {
-                texto += "\n  " + h + ":00 - " + (h + 1) + ":00  " + reservadoPor[dia][h];
+                texto += "\n  " + h + ":00 - " + (h + 1) + ":00  " + ("-".equals(reservadoPor[dia][h]) ? "(sin materia)" : reservadoPor[dia][h]);
                 hayReservas = true;
             }
         }
         return hayReservas ? texto : texto + " todo el día libre";
     }
-    //recorre toda la matriz con dos for: cuantas horas tiene ocupadas en la semana
+    //recorre toda la matriz con dos for osea cuantas horas tiene ocupadas en la semana
     public int horasOcupadasEnLaSemana()
     {
         int total = 0;
@@ -142,6 +135,11 @@ public class Aula
             }
         }
         return total;
+    }
+    //"por CALC101" o nada si se reservo sin materia
+    private String porQuien(int dia, int hora)
+    {
+        return "-".equals(reservadoPor[dia][hora]) ? "" : " por " + reservadoPor[dia][hora];
     }
     public String quienOcupa(int dia, int hora) throws DatoInvalidoException
     {
@@ -159,7 +157,7 @@ public class Aula
             throw new DatoInvalidoException("La hora debe estar entre 0 y 23");
         }
     }
-    //que el bloque completo quepa en el dia: no se pasa de medianoche
+    //que el bloque completo quepa en el dia que no se pasa de medianoche
     private void validarRango(int dia, int hora, int duracion) throws DatoInvalidoException
     {
         validarCasilla(dia, hora);

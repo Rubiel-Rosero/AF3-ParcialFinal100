@@ -4,8 +4,6 @@ import excepciones.DatoInvalidoException;
 
 /**
 parcial, vale 25% normalmente
-tiene dos constructores (sobrecarga): uno con el 25% fijo
-y otro por si el profesor le pone otro porcentaje
 */
 public class Parcial extends Evaluacion
 {

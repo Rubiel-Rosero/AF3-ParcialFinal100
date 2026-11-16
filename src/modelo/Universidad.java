@@ -11,10 +11,6 @@ import java.util.TreeMap;
 
 /**
 aqui va todo lo de la universidad
-- facultades: arreglo nativo Facultad[5] (tamaño fijo, casi nunca cambian)
-- estudiantes: HashMap con el id como clave, para buscar en O(1) sin recorrer
-- materias: HashMap con el codigo como clave
-- aulas: TreeMap con el nombre como clave, para listarlas ordenadas
 */
 public class Universidad
 {
@@ -23,15 +19,12 @@ public class Universidad
     private int cantidadFacultades = 0;
     private HashMap<String, Estudiante> estudiantes = new HashMap<>();
     private HashMap<String, Materia> materias = new HashMap<>();
-    //TreeMap y no HashMap: las aulas se listan ordenadas por nombre sin tener que ordenar
-    //la clave es el nombre en mayusculas para que "aula 101" y "Aula 101" sean la misma
+    //TreeMap las aulas se listan ordenadas por nombre sin tener que ordenar
     private TreeMap<String, Aula> aulas = new TreeMap<>();
-    //el mapa del campus: edificios y caminos (matriz de adyacencia + dijkstra)
+    //el mapa del campus edificios y caminos es decir la matriz de adyacencia y dijkstra)
     private Campus campus = new Campus();
-
     // estudiantes
-
-    //registrar: el id no se puede repetir porque es la clave del mapa
+    //registrar el id no se puede repetir porque es la clave del mapa
     public void registrarEstudiante(Estudiante estudiante) throws DatoInvalidoException
     {
         if(estudiantes.containsKey(estudiante.getId()))
@@ -40,7 +33,7 @@ public class Universidad
         }
         estudiantes.put(estudiante.getId(), estudiante);
     }
-    //buscar por id: get va directo a la cubeta, si no esta devuelve null
+    //buscar por id get va directo a la cubeta, si no esta devuelve null
     public Estudiante buscarEstudiante(String id) throws EstudianteNoEncontradoException
     {
         Estudiante encontrado = estudiantes.get(id.trim());
@@ -50,10 +43,7 @@ public class Universidad
         }
         return encontrado;
     }
-    //baja definitiva: remove devuelve el estudiante que saco
-    //se devuelve para que deshacer (bloque 8) lo pueda volver a meter
-    //no se deja eliminar a alguien inscrito o en espera: primero hay que cancelar,
-    //si no quedaria un estudiante "fantasma" ocupando un cupo
+    //baja definitiva remove devuelve el estudiante que saco
     public Estudiante eliminarEstudiante(String id) throws EstudianteNoEncontradoException, DatoInvalidoException
     {
         Estudiante estudiante = buscarEstudiante(id);
@@ -66,7 +56,7 @@ public class Universidad
         }
         return estudiantes.remove(estudiante.getId());
     }
-    //lo usa deshacer: vuelve a meter un estudiante eliminado, con sus notas y todo
+    //deshacer vuelve a meter un estudiante eliminado, con sus notas y todo
     public void restaurarEstudiante(Estudiante estudiante)
     {
         estudiantes.put(estudiante.getId(), estudiante);
@@ -82,7 +72,7 @@ public class Universidad
             lista[i] = e;
             i++;
         }
-        //ordenamiento por insercion: cada uno se corre a la izquierda hasta su lugar
+        //ordenamiento por insercion cada uno se corre a la izquierda hasta su lugar
         for(int j = 1; j < lista.length; j++)
         {
             Estudiante actual = lista[j];
@@ -104,9 +94,7 @@ public class Universidad
     {
         return estudiantes.containsKey(id.trim());
     }
-
     // Materias
-
     public void crearMateria(Materia materia) throws DatoInvalidoException
     {
         if(materias.containsKey(materia.getCodigo()))
@@ -131,7 +119,7 @@ public class Universidad
         materia.agregarPrerrequisito(prerrequisito);
     }
     //devuelve true si quedo inscrito, false si quedo en la cola de espera
-    //aqui se atrapa la hija (CupoLleno) para tratarla distinto: no es error, es ir a la cola
+    //aqui se atrapa la hija para tratarla distinto no es un error como tal, es ir a la cola
     public boolean inscribirEstudiante(String id, String codigoMateria) throws EstudianteNoEncontradoException, DatoInvalidoException, PreRequisitoNoAprobadoException
     {
         Estudiante estudiante = buscarEstudiante(id);
@@ -154,7 +142,7 @@ public class Universidad
         Materia materia = buscarMateria(codigoMateria);
         return materia.cancelarInscripcion(estudiante);
     }
-    //igual que con estudiantes: del mapa a un arreglo y ordenado por codigo con insercion
+    //igual que con estudiantes del mapa a un arreglo y ordenado por codigo con insercion
     public Materia[] listarMaterias()
     {
         Materia[] lista = new Materia[materias.size()];
@@ -200,9 +188,7 @@ public class Universidad
     {
         return materias.size();
     }
-
-    // aulas y horarios
-
+    //aulas y horarios
     public void crearAula(Aula aula) throws DatoInvalidoException
     {
         String clave = aula.getNombre().toUpperCase();
@@ -212,7 +198,7 @@ public class Universidad
         }
         aulas.put(clave, aula);
     }
-    //el TreeMap baja por el arbol comparando nombres: O(log n)
+    //el TreeMap baja por el arbol comparando nombres
     public Aula buscarAula(String nombre) throws DatoInvalidoException
     {
         Aula encontrada = aulas.get(nombre.trim().toUpperCase());
@@ -222,7 +208,7 @@ public class Universidad
         }
         return encontrada;
     }
-    //values() de un TreeMap ya sale ordenado por la clave (nombre), no hay que ordenar
+    //TreeMap ya sale ordenado por la clave nombre, no hay que ordenar
     public Aula[] listarAulas()
     {
         Aula[] lista = new Aula[aulas.size()];
@@ -234,8 +220,7 @@ public class Universidad
         }
         return lista;
     }
-    //el enunciado tambien pide por capacidad: el TreeMap esta ordenado por nombre,
-    //entonces se copia a un arreglo y se ordena por capacidad (mayor a menor) con insercion
+    //copia a un arreglo y se ordena por capacidad mayor a menor con insercion
     public Aula[] listarAulasPorCapacidad()
     {
         Aula[] lista = listarAulas();
@@ -275,16 +260,12 @@ public class Universidad
     {
         return aulas.size();
     }
-
     // rutas entre edificios (lo hace Campus)
-
     public Campus getCampus()
     {
         return campus;
     }
-
-    // ===================== FACULTADES =====================
-
+    //Facultades
     //agregar en la siguiente casilla libre
     public void agregarFacultad(Facultad facultad) throws DatoInvalidoException
     {

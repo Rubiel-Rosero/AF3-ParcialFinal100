@@ -5,10 +5,6 @@ import excepciones.DatoInvalidoException;
 
 /**
 el mapa del campus como grafo no dirigido
-- nombres: arreglo nativo String[] con los edificios (el indice es el numero del edificio)
-- distancias: matriz de adyacencia int[N][N]
-  distancias[a][b] = metros entre a y b, 0 = no hay camino directo
-  es simetrica (distancias[a][b] == distancias[b][a]) porque el camino sirve en los dos sentidos
 la ruta mas corta se calcula con dijkstra
 */
 public class Campus
@@ -18,7 +14,7 @@ public class Campus
     private String[] nombres;
     private int[][] distancias;
     private int cantidadEdificios = 0;
-    //sobrecarga: sin parametros usa 10 edificios como maximo
+    //sobrecarga sin parametros usa 10 edificios como maximo
     public Campus()
     {
         nombres = new String[MAX_EDIFICIOS];
@@ -33,10 +29,8 @@ public class Campus
         nombres = new String[maxEdificios];
         distancias = new int[maxEdificios][maxEdificios]; //java la llena de 0: sin caminos
     }
-
-    // edificios
-
-    //se guarda en la siguiente casilla libre, devuelve el numero que le toco
+    //edificios
+    //se guarda en la siguiente casilla libre y devuelve el numero que le toco
     public int agregarEdificio(String nombre) throws DatoInvalidoException
     {
         if(nombre == null || nombre.trim().isEmpty())
@@ -76,9 +70,7 @@ public class Campus
         }
         return texto;
     }
-
     // conexiones
-
     //se escribe en las dos casillas para que la matriz quede simetrica
     public void agregarConexion(int a, int b, int metros) throws DatoInvalidoException
     {
@@ -95,7 +87,7 @@ public class Campus
         distancias[a][b] = metros;
         distancias[b][a] = metros;
     }
-    //sobrecarga: lo mismo pero con los nombres
+    //sobrecarga lo mismo pero con los nombres
     public void agregarConexion(String edificioA, String edificioB, int metros) throws DatoInvalidoException
     {
         agregarConexion(indiceDe(edificioA), indiceDe(edificioB), metros);
@@ -117,9 +109,7 @@ public class Campus
         validarEdificio(b);
         return distancias[a][b];
     }
-
     // dijkstra
-
     public Ruta calcularRutaMasCorta(String origen, String destino) throws DatoInvalidoException
     {
         return calcularRutaMasCorta(indiceDe(origen), indiceDe(destino));
@@ -132,27 +122,27 @@ public class Campus
         int[] distancia = new int[n];
         boolean[] visitado = new boolean[n];
         int[] anterior = new int[n];
-        //1. todas en infinito porque aun no se sabe llegar a ninguna, el origen en 0
+        //todas en infinito porque aun no se sabe llegar a ninguna, el origen en 0
         for(int i = 0; i < n; i++)
         {
             distancia[i] = INFINITO;
             anterior[i] = -1;
         }
         distancia[origen] = 0;
-        //2. en cada vuelta se confirma un edificio
+        //en cada vuelta se confirma un edificio
         for(int vuelta = 0; vuelta < n; vuelta++)
         {
             int u = masCercanoSinVisitar(distancia, visitado);
             if(u == -1)
             {
-                break; //lo que queda no se puede alcanzar
+                break;//lo que queda no se puede alcanzar
             }
             visitado[u] = true;
             if(u == destino)
             {
-                break; //el destino ya es definitivo, no hace falta seguir
+                break;//el destino ya es definitivo, no hace falta seguir
             }
-            //3. relajar: si pasar por u es mas corto para llegar a v, se actualiza
+            //si pasar por u es mas corto para llegar a v, se actualiza
             for(int v = 0; v < n; v++)
             {
                 if(distancias[u][v] > 0 && !visitado[v] && distancia[u] + distancias[u][v] < distancia[v])
@@ -182,7 +172,7 @@ public class Campus
         }
         return mejor;
     }
-    //anterior[] lleva del destino hacia atras: se apila y al desapilar sale en el orden correcto
+    //llevar del destino hacia atras entonces se apila y al desapilar sale en el orden correcto
     private Ruta armarRuta(int[] anterior, int destino, int total)
     {
         Pila<Integer> pila = new Pila<>();
@@ -208,10 +198,8 @@ public class Campus
         }
         return new Ruta(edificios, tramos, total);
     }
-
-    // apoyo
-
-    //la matriz completa como tabla (recorrido con dos for)
+    //apoyo
+    //la matriz completa como tabla
     public String mostrarMatriz()
     {
         String texto = String.format("%-14s", "");

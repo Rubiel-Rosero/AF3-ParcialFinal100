@@ -4,7 +4,6 @@ import excepciones.DatoInvalidoException;
 
 /**
 profesor, el otro hijo de persona
-sirve para mostrar que la herencia tiene mas de un hijo
 */
 public class Profesor extends Persona
 {

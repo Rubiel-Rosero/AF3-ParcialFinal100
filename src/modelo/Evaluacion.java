@@ -5,7 +5,7 @@ import excepciones.DatoInvalidoException;
 /**
 clase padre de quiz, parcial y examen final
 cada hijo dice cuanto vale (porcentaje) y que tipo es
-con un arreglo Evaluacion[] se calcula la nota definitiva de una materia
+con un arreglo se calcula la nota definitiva de una materia
 */
 public abstract class Evaluacion
 {

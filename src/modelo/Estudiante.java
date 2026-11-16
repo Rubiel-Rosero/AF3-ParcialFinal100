@@ -6,7 +6,6 @@ import java.util.Locale;
 
 /**
 estudiante, hereda de persona
-las notas van en una matriz Double[10][20]: fila = semestre, columna = materia
 al lado va otra matriz con el codigo de cada materia para saber de que es cada nota
 se usa Double y no double para que una casilla vacia sea null (sin nota)
 */
