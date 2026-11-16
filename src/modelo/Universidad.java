@@ -26,6 +26,8 @@ public class Universidad
     //TreeMap y no HashMap: las aulas se listan ordenadas por nombre sin tener que ordenar
     //la clave es el nombre en mayusculas para que "aula 101" y "Aula 101" sean la misma
     private TreeMap<String, Aula> aulas = new TreeMap<>();
+    //el mapa del campus: edificios y caminos (matriz de adyacencia + dijkstra)
+    private Campus campus = new Campus();
 
     // estudiantes
 
@@ -272,6 +274,13 @@ public class Universidad
     public int getCantidadAulas()
     {
         return aulas.size();
+    }
+
+    // rutas entre edificios (lo hace Campus)
+
+    public Campus getCampus()
+    {
+        return campus;
     }
 
     // ===================== FACULTADES =====================
