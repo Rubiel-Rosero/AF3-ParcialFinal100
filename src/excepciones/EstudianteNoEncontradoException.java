@@ -7,6 +7,6 @@ public class EstudianteNoEncontradoException extends SistemaAcademicoException
 {
     public EstudianteNoEncontradoException(String mensaje)
     {
-        super(mensaje);
+        super("EstudianteNoEncontradoException", mensaje);
     }
 }

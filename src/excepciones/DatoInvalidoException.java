@@ -8,6 +8,6 @@ public class DatoInvalidoException extends SistemaAcademicoException
 {
     public DatoInvalidoException(String mensaje)
     {
-        super(mensaje);
+        super("DatoInvalidoException", mensaje);
     }
 }

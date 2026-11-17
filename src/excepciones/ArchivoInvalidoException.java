@@ -7,6 +7,6 @@ public class ArchivoInvalidoException extends SistemaAcademicoException
 {
     public ArchivoInvalidoException(String mensaje)
     {
-        super(mensaje);
+        super("ArchivoInvalidoException", mensaje);
     }
 }

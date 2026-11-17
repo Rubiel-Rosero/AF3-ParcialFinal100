@@ -7,6 +7,6 @@ public class PreRequisitoNoAprobadoException extends SistemaAcademicoException
 {
     public PreRequisitoNoAprobadoException(String mensaje)
     {
-        super(mensaje);
+        super("PreRequisitoNoAprobadoException", mensaje);
     }
 }

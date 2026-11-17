@@ -7,6 +7,6 @@ public class HorarioConflictivoException extends SistemaAcademicoException
 {
     public HorarioConflictivoException(String mensaje)
     {
-        super(mensaje);
+        super("HorarioConflictivoException", mensaje);
     }
 }

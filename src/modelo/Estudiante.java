@@ -2,7 +2,6 @@ package modelo;
 
 import excepciones.DatoInvalidoException;
 import java.util.LinkedList;
-import java.util.Locale;
 
 /*
 estudiante, hereda de persona
@@ -183,10 +182,17 @@ public class Estudiante extends Persona
             throw new DatoInvalidoException("El semestre debe estar entre 1 y " + MAX_SEMESTRES);
         }
     }
-    //dos decimales con punto (en español saldria con coma)
+    //deja el numero con dos decimales, ejemplo 4.1 -> 4.10
     public static String formatear(double numero)
     {
-        return String.format(Locale.US, "%.2f", numero);
+        int centesimas = (int) Math.round(numero * 100); //4.1 -> 410
+        int entero = centesimas / 100;    //4
+        int decimales = centesimas % 100; //10
+        if(decimales < 10)
+        {
+            return entero + ".0" + decimales; //3.05
+        }
+        return entero + "." + decimales;
     }
     public int getSemestre()
     {

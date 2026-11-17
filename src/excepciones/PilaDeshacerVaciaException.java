@@ -7,6 +7,6 @@ public class PilaDeshacerVaciaException extends SistemaAcademicoException
 {
     public PilaDeshacerVaciaException(String mensaje)
     {
-        super(mensaje);
+        super("PilaDeshacerVaciaException", mensaje);
     }
 }

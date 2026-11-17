@@ -7,6 +7,6 @@ public class ColaDeEsperaVaciaException extends SistemaAcademicoException
 {
     public ColaDeEsperaVaciaException(String mensaje)
     {
-        super(mensaje);
+        super("ColaDeEsperaVaciaException", mensaje);
     }
 }

@@ -7,6 +7,6 @@ public class CupoLlenoException extends SistemaAcademicoException
 {
     public CupoLlenoException(String mensaje)
     {
-        super(mensaje);
+        super("CupoLlenoException", mensaje);
     }
 }
