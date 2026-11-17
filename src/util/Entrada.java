@@ -15,7 +15,7 @@ public class Entrada
             {
                 return texto;
             }
-            System.out.println("   No puede quedar vacío, intente de nuevo.");
+            System.out.println("No puede quedar vacío, intente de nuevo.");
         }
     }
     //texto que si puede quedar vacio (para datos opcionales)
@@ -35,7 +35,7 @@ public class Entrada
             }
             catch(NumberFormatException e)
             {
-                System.out.println("   \"" + texto + "\" no es un número entero, intente de nuevo.");
+                System.out.println("\"" + texto + "\" no es un número entero, intente de nuevo.");
             }
         }
     }

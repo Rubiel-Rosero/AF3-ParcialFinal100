@@ -353,7 +353,7 @@ public class Main
                     return indice;
                 }
             }
-            System.out.println("   No existe ese edificio, escriba el número o el nombre.");
+            System.out.println("No existe ese edificio, escriba el número o el nombre.");
         }
     }
 }
