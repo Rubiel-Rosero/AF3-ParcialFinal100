@@ -24,19 +24,7 @@ public class Profesor extends Persona
     @Override
     public String mostrarInformacion()
     {
-        return super.mostrarInformacion() + "\nDepartamento: " + departamento + "\nSalario: $" + String.format("%,.0f", salario);
-    }
-    public String getDepartamento()
-    {
-        return departamento;
-    }
-    public void setDepartamento(String departamento)
-    {
-        this.departamento = departamento;
-    }
-    public double getSalario()
-    {
-        return salario;
+        return super.mostrarInformacion() + "\nDepartamento: " + departamento + "\nSalario: $" + salario;
     }
     public void setSalario(double salario) throws DatoInvalidoException
     {

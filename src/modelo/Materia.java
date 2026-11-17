@@ -62,12 +62,16 @@ public class Materia
     public void verificarPrerrequisitos(Estudiante estudiante) throws PreRequisitoNoAprobadoException
     {
         String faltantes = "";
-        for(Materia prerrequisito : prerrequisitos)
+        for(int i = 0; i < prerrequisitos.size(); i++)
         {
-            String codigoPre = prerrequisito.getCodigo();
+            String codigoPre = prerrequisitos.get(i).getCodigo();
             if(!estudiante.haAprobado(codigoPre))
             {
-                faltantes += (faltantes.isEmpty() ? "" : ", ") + codigoPre;
+                if(!faltantes.isEmpty())
+                {
+                    faltantes += ", ";
+                }
+                faltantes += codigoPre;
             }
         }
         if(!faltantes.isEmpty())
@@ -82,9 +86,9 @@ public class Materia
             return codigo + " no tiene prerrequisitos";
         }
         String texto = "Prerrequisitos de " + codigo + ":";
-        for(Materia prerrequisito : prerrequisitos)
+        for(int i = 0; i < prerrequisitos.size(); i++)
         {
-            texto += "\n- " + prerrequisito;
+            texto += "\n- " + prerrequisitos.get(i);
         }
         return texto;
     }
@@ -171,10 +175,6 @@ public class Materia
     public int getCuposMaximos()
     {
         return cuposMaximos;
-    }
-    public int getCreditos()
-    {
-        return creditos;
     }
     public LinkedList<Materia> getPrerrequisitos()
     {

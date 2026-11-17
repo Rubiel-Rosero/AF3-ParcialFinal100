@@ -176,7 +176,11 @@ public class Universidad
                 texto += m + "\n";
             }
         }
-        return texto.isEmpty() ? estudiante.getNombre() + " no tiene materias inscritas" : texto.trim();
+        if(texto.isEmpty())
+        {
+            return estudiante.getNombre() + " no tiene materias inscritas";
+        }
+        return texto.trim();
     }
     public int getCantidadMaterias()
     {
@@ -249,10 +253,6 @@ public class Universidad
     public void cambiarHorario(String nombreAula, int dia, int hora, int duracion, int nuevoDia, int nuevaHora) throws DatoInvalidoException, HorarioConflictivoException
     {
         buscarAula(nombreAula).cambiarHorario(dia, hora, duracion, nuevoDia, nuevaHora);
-    }
-    public int getCantidadAulas()
-    {
-        return aulas.size();
     }
     // rutas entre edificios (lo hace Campus)
     public Campus getCampus()

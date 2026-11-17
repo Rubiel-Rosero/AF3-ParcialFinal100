@@ -100,7 +100,14 @@ public class Aula
         String texto = "";
         for(int h = hora; h < hora + duracion; h++)
         {
-            texto += NOMBRES_DIAS[dia] + " " + h + ":00 -> " + (horario[dia][h] ? "OCUPADO" + porQuien(dia, h) : "LIBRE") + "\n";
+            if(horario[dia][h])
+            {
+                texto += NOMBRES_DIAS[dia] + " " + h + ":00 -> OCUPADO" + porQuien(dia, h) + "\n";
+            }
+            else
+            {
+                texto += NOMBRES_DIAS[dia] + " " + h + ":00 -> LIBRE\n";
+            }
         }
         return texto.trim();
     }
@@ -114,11 +121,22 @@ public class Aula
         {
             if(horario[dia][h])
             {
-                texto += "\n  " + h + ":00 - " + (h + 1) + ":00  " + ("-".equals(reservadoPor[dia][h]) ? "(sin materia)" : reservadoPor[dia][h]);
+                if("-".equals(reservadoPor[dia][h]))
+                {
+                    texto += "\n  " + h + ":00 - " + (h + 1) + ":00  (sin materia)";
+                }
+                else
+                {
+                    texto += "\n  " + h + ":00 - " + (h + 1) + ":00  " + reservadoPor[dia][h];
+                }
                 hayReservas = true;
             }
         }
-        return hayReservas ? texto : texto + " todo el día libre";
+        if(!hayReservas)
+        {
+            return texto + " todo el día libre";
+        }
+        return texto;
     }
     //recorre toda la matriz con dos for osea cuantas horas tiene ocupadas en la semana
     public int horasOcupadasEnLaSemana()
@@ -139,7 +157,11 @@ public class Aula
     //"por CALC101" o nada si se reservo sin materia
     private String porQuien(int dia, int hora)
     {
-        return "-".equals(reservadoPor[dia][hora]) ? "" : " por " + reservadoPor[dia][hora];
+        if("-".equals(reservadoPor[dia][hora]))
+        {
+            return "";
+        }
+        return " por " + reservadoPor[dia][hora];
     }
     public String quienOcupa(int dia, int hora) throws DatoInvalidoException
     {

@@ -45,10 +45,6 @@ public abstract class Evaluacion
         }
         return definitiva;
     }
-    public String getDescripcion()
-    {
-        return descripcion;
-    }
     public double getNota()
     {
         return nota;

@@ -43,10 +43,6 @@ public abstract class Persona
         }
         this.nombre = nombre.trim();
     }
-    public String getEmail()
-    {
-        return email;
-    }
     public void setEmail(String email) throws DatoInvalidoException
     {
         if(email == null || !email.contains("@"))

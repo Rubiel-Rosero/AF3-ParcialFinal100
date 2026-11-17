@@ -19,10 +19,6 @@ public class Ruta
     {
         return edificios;
     }
-    public int[] getTramos()
-    {
-        return tramos;
-    }
     public int getDistanciaTotal()
     {
         return distanciaTotal;

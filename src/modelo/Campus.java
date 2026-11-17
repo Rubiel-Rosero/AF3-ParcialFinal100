@@ -202,17 +202,17 @@ public class Campus
     //la matriz completa como tabla
     public String mostrarMatriz()
     {
-        String texto = String.format("%-14s", "");
+        String texto = "\t\t";
         for(int j = 0; j < cantidadEdificios; j++)
         {
-            texto += String.format("%6d", j);
+            texto += j + "\t";
         }
         for(int i = 0; i < cantidadEdificios; i++)
         {
-            texto += "\n" + String.format("%-14s", i + " " + nombres[i]);
+            texto += "\n" + i + " " + nombres[i] + "\t";
             for(int j = 0; j < cantidadEdificios; j++)
             {
-                texto += String.format("%6d", distancias[i][j]);
+                texto += distancias[i][j] + "\t";
             }
         }
         return texto;

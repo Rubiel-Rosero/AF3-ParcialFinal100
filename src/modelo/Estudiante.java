@@ -95,7 +95,11 @@ public class Estudiante extends Persona
                 cantidad++;
             }
         }
-        return cantidad == 0 ? 0 : suma / cantidad;
+        if(cantidad == 0)
+        {
+            return 0;
+        }
+        return suma / cantidad;
     }
     //promedio acumulado de toda la carrera (sobrecarga: sin parametros)
     public double calcularPromedio()
@@ -113,7 +117,11 @@ public class Estudiante extends Persona
                 }
             }
         }
-        return cantidad == 0 ? 0 : suma / cantidad;
+        if(cantidad == 0)
+        {
+            return 0;
+        }
+        return suma / cantidad;
     }
     //si en algun semestre saco 3.0 o mas en esa materia (lo usan los pre-requisitos)
     public boolean haAprobado(String codigoMateria)
@@ -192,10 +200,6 @@ public class Estudiante extends Persona
     public Double getNota(int semestre, int columna)
     {
         return notas[semestre - 1][columna];
-    }
-    public String getCodigoMateria(int semestre, int columna)
-    {
-        return codigosMaterias[semestre - 1][columna];
     }
     public LinkedList<String> getHistorialMaterias()
     {
