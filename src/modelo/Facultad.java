@@ -1,6 +1,6 @@
 package modelo;
 
-/**
+/*
 una facultad de la universidad
 */
 public class Facultad

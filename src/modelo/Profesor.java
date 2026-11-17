@@ -2,7 +2,7 @@ package modelo;
 
 import excepciones.DatoInvalidoException;
 
-/**
+/*
 profesor, el otro hijo de persona
 */
 public class Profesor extends Persona

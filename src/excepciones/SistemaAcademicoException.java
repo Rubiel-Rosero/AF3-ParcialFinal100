@@ -1,6 +1,6 @@
 package excepciones;
 
-/**
+/*
 excepcion padre de todas las del sistema
 asi en el menu se pueden atrapar todas con un solo catch
 */

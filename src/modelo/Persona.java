@@ -2,7 +2,7 @@ package modelo;
 
 import excepciones.DatoInvalidoException;
 
-/**
+/*
 clase padre de estudiante y profesor
 */
 public abstract class Persona

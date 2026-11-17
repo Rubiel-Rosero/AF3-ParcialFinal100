@@ -2,7 +2,7 @@ package modelo;
 
 import excepciones.DatoInvalidoException;
 
-/**
+/*
 parcial, vale 25% normalmente
 */
 public class Parcial extends Evaluacion
@@ -10,7 +10,8 @@ public class Parcial extends Evaluacion
     private double porcentaje;
     public Parcial(String descripcion, double nota) throws DatoInvalidoException
     {
-        this(descripcion, nota, 25);
+        super(descripcion, nota);
+        this.porcentaje = 25;
     }
     public Parcial(String descripcion, double nota, double porcentaje) throws DatoInvalidoException
     {

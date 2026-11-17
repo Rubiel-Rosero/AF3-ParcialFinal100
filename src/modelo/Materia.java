@@ -6,7 +6,7 @@ import excepciones.DatoInvalidoException;
 import excepciones.PreRequisitoNoAprobadoException;
 import java.util.LinkedList;// la clase Queue es una interfaz y no se puede instanciar directamente, por eso se usa LinkedList
 import java.util.Queue;
-/**
+/*
 una materia con sus cupos, creditos, prerrequisitos, inscritos y cola de espera
 */
 public class Materia

@@ -3,7 +3,7 @@ package modelo;
 import excepciones.DatoInvalidoException;
 import java.util.Stack;
 
-/**
+/*
 el mapa del campus como grafo no dirigido
 la ruta mas corta se calcula con dijkstra
 */

@@ -3,7 +3,7 @@ package modelo;
 import excepciones.DatoInvalidoException;
 import excepciones.HorarioConflictivoException;
 
-/**
+/*
 una aula con su horario semanal
 */
 public class Aula
@@ -121,7 +121,7 @@ public class Aula
         {
             if(horario[dia][h])
             {
-                if("-".equals(reservadoPor[dia][h]))
+                if(reservadoPor[dia][h].equals("-"))
                 {
                     texto += "\n  " + h + ":00 - " + (h + 1) + ":00  (sin materia)";
                 }
@@ -157,7 +157,7 @@ public class Aula
     //"por CALC101" o nada si se reservo sin materia
     private String porQuien(int dia, int hora)
     {
-        if("-".equals(reservadoPor[dia][hora]))
+        if(reservadoPor[dia][hora].equals("-"))
         {
             return "";
         }

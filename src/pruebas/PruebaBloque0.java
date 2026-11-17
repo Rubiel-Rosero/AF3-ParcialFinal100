@@ -2,7 +2,7 @@ package pruebas;
 
 import excepciones.*;
 
-/**
+/*
 prueba del bloque 0
 se lanza cada excepcion y se mira que el catch de la clase padre la atrape
 */

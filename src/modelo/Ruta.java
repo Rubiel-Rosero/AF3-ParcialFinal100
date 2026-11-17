@@ -1,6 +1,6 @@
 package modelo;
 
-/**
+/*
 el resultado de dijkstra: por que edificios pasa, cuanto mide cada tramo y el total
 se guarda en arreglos nativos porque cuando se crea ya se sabe cuantos edificios tiene
 */

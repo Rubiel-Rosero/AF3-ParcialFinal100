@@ -6,7 +6,7 @@ import modelo.Campus;
 import modelo.Ruta;
 import modelo.Universidad;
 
-/**
+/*
 prueba del bloque 6: matriz de adyacencia int[N][N] y dijkstra
 reproduce el ejemplo 5 del enunciado
 */

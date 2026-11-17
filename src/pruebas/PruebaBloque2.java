@@ -12,7 +12,7 @@ import modelo.Persona;
 import modelo.Profesor;
 import modelo.Universidad;
 
-/**
+/*
 prueba del bloque 2: persona, estudiante, profesor, facultades
 usa los datos del ejemplo 1 y el ejemplo 6 del enunciado
 */

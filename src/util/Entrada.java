@@ -18,12 +18,6 @@ public class Entrada
             System.out.println("No puede quedar vacío, intente de nuevo.");
         }
     }
-    //texto que si puede quedar vacio (para datos opcionales)
-    public static String leerTextoOpcional(String mensaje)
-    {
-        System.out.print(mensaje);
-        return sc.nextLine().trim();
-    }
     public static int leerEntero(String mensaje)
     {
         while(true)
@@ -52,12 +46,11 @@ public class Entrada
             System.out.println("   Debe estar entre " + minimo + " y " + maximo + ", intente de nuevo.");
         }
     }
-    //acepta 3.5 o 3,5
     public static double leerDecimal(String mensaje)
     {
         while(true)
         {
-            String texto = leerTexto(mensaje).replace(',', '.');
+            String texto = leerTexto(mensaje);
             try
             {
                 return Double.parseDouble(texto);
@@ -66,22 +59,6 @@ public class Entrada
             {
                 System.out.println("   \"" + texto + "\" no es un número, intente de nuevo.");
             }
-        }
-    }
-    public static boolean confirmar(String mensaje)
-    {
-        while(true)
-        {
-            String texto = leerTexto(mensaje + " (s/n): ").toLowerCase();
-            if(texto.equals("s") || texto.equals("si"))
-            {
-                return true;
-            }
-            if(texto.equals("n") || texto.equals("no"))
-            {
-                return false;
-            }
-            System.out.println("   Responda s o n.");
         }
     }
 }

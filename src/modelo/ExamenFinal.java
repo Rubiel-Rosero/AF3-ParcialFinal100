@@ -2,7 +2,7 @@ package modelo;
 
 import excepciones.DatoInvalidoException;
 
-/**
+/*
 examen final, vale 30%
 */
 public class ExamenFinal extends Evaluacion

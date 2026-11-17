@@ -2,7 +2,7 @@ package modelo;
 
 import excepciones.DatoInvalidoException;
 
-/**
+/*
 quiz corto, vale 10%
 */
 public class Quiz extends Evaluacion

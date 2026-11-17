@@ -7,7 +7,7 @@ import modelo.Aula;
 import modelo.Materia;
 import modelo.Universidad;
 
-/**
+/*
 prueba del bloque 5: horarios con matriz boolean[7][24] y aulas en TreeMap
 reproduce el ejemplo 4 del enunciado
 */

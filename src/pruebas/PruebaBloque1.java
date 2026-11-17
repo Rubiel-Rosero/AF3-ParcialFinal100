@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
-/**
+/*
 prueba del bloque 1: las estructuras de java.util que usa el sistema
 LinkedList (inscritos, prerrequisitos, historial), Stack (ruta de Dijkstra) y Queue (cola de espera)
 cada verificar compara lo que da el metodo con lo que deberia dar

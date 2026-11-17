@@ -6,7 +6,7 @@ import modelo.Estudiante;
 import modelo.Materia;
 import modelo.Universidad;
 
-/**
+/*
 datos para probar el menu
 */
 public class DatosDePrueba

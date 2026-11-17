@@ -8,7 +8,7 @@ import excepciones.PreRequisitoNoAprobadoException;
 import java.util.HashMap;
 import java.util.TreeMap;
 
-/**
+/*
 aqui va todo lo de la universidad
 */
 public class Universidad
@@ -26,7 +26,7 @@ public class Universidad
     //registrar el id no se puede repetir porque es la clave del mapa
     public void registrarEstudiante(Estudiante estudiante) throws DatoInvalidoException
     {
-        if(estudiantes.containsKey(estudiante.getId()))
+        if(estudiantes.get(estudiante.getId()) != null)
         {
             throw new DatoInvalidoException("Ya existe un estudiante con ID: " + estudiante.getId());
         }
@@ -46,8 +46,9 @@ public class Universidad
     public Estudiante eliminarEstudiante(String id) throws EstudianteNoEncontradoException, DatoInvalidoException
     {
         Estudiante estudiante = buscarEstudiante(id);
-        for(Materia m : materias.values())
+        for(String codigo : materias.keySet())
         {
+            Materia m = materias.get(codigo);
             if(m.estaInscrito(estudiante) || m.estaEnEspera(estudiante))
             {
                 throw new DatoInvalidoException(estudiante.getNombre() + " sigue en " + m.getCodigo() + ". Cancele primero la inscripción");
@@ -60,28 +61,15 @@ public class Universidad
     {
         estudiantes.put(estudiante.getId(), estudiante);
     }
-    //el hashmap no guarda orden, entonces se pasan a un arreglo nativo
-    //y se ordenan por id con insercion
+    //se pasan del mapa a un arreglo nativo
     public Estudiante[] listarEstudiantes()
     {
         Estudiante[] lista = new Estudiante[estudiantes.size()];
         int i = 0;
-        for(Estudiante e : estudiantes.values())
+        for(String id : estudiantes.keySet())
         {
-            lista[i] = e;
+            lista[i] = estudiantes.get(id);
             i++;
-        }
-        //ordenamiento por insercion cada uno se corre a la izquierda hasta su lugar
-        for(int j = 1; j < lista.length; j++)
-        {
-            Estudiante actual = lista[j];
-            int k = j - 1;
-            while(k >= 0 && lista[k].getId().compareTo(actual.getId()) > 0)
-            {
-                lista[k + 1] = lista[k];
-                k--;
-            }
-            lista[k + 1] = actual;
         }
         return lista;
     }
@@ -91,12 +79,12 @@ public class Universidad
     }
     public boolean existeEstudiante(String id)
     {
-        return estudiantes.containsKey(id.trim());
+        return estudiantes.get(id.trim()) != null;
     }
     // Materias
     public void crearMateria(Materia materia) throws DatoInvalidoException
     {
-        if(materias.containsKey(materia.getCodigo()))
+        if(materias.get(materia.getCodigo()) != null)
         {
             throw new DatoInvalidoException("Ya existe la materia " + materia.getCodigo());
         }
@@ -141,26 +129,15 @@ public class Universidad
         Materia materia = buscarMateria(codigoMateria);
         return materia.cancelarInscripcion(estudiante);
     }
-    //igual que con estudiantes del mapa a un arreglo y ordenado por codigo con insercion
+    //igual que con estudiantes, del mapa a un arreglo
     public Materia[] listarMaterias()
     {
         Materia[] lista = new Materia[materias.size()];
         int i = 0;
-        for(Materia m : materias.values())
+        for(String codigo : materias.keySet())
         {
-            lista[i] = m;
+            lista[i] = materias.get(codigo);
             i++;
-        }
-        for(int j = 1; j < lista.length; j++)
-        {
-            Materia actual = lista[j];
-            int k = j - 1;
-            while(k >= 0 && lista[k].getCodigo().compareTo(actual.getCodigo()) > 0)
-            {
-                lista[k + 1] = lista[k];
-                k--;
-            }
-            lista[k + 1] = actual;
         }
         return lista;
     }
@@ -190,7 +167,7 @@ public class Universidad
     public void crearAula(Aula aula) throws DatoInvalidoException
     {
         String clave = aula.getNombre().toUpperCase();
-        if(aulas.containsKey(clave))
+        if(aulas.get(clave) != null)
         {
             throw new DatoInvalidoException("Ya existe el aula " + aula.getNombre());
         }
@@ -211,9 +188,9 @@ public class Universidad
     {
         Aula[] lista = new Aula[aulas.size()];
         int i = 0;
-        for(Aula a : aulas.values())
+        for(String clave : aulas.keySet())
         {
-            lista[i] = a;
+            lista[i] = aulas.get(clave);
             i++;
         }
         return lista;

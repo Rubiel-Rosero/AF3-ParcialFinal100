@@ -7,7 +7,7 @@ import modelo.Universidad;
 import util.DatosDePrueba;
 import util.Entrada;
 
-/**
+/*
 clase principal con el menu con todas las opciones del enunciado
 los errores del sistema se atrapan con un solo catch (la clase padre SistemaAcademicoException)
 y se muestran con su nombre, sin que el programa se cierre
@@ -47,17 +47,8 @@ public class Main
     {
         try
         {
-            if(Entrada.confirmar("¿Cargar datos de prueba de los ejemplos del enunciado?"))
-            {
-                DatosDePrueba.cargar(universidad);
-                System.out.println("Datos de prueba cargados: 6 estudiantes, 5 materias, 4 aulas, 5 edificios y 5 facultades.");
-            }
-            else
-            {
-                universidad.cargarFacultades();
-                universidad.getCampus().cargarCampusPorDefecto();
-                System.out.println("Se cargaron solo las facultades y los 5 edificios del campus.");
-            }
+            DatosDePrueba.cargar(universidad);
+            System.out.println("Datos de prueba cargados: 6 estudiantes, 5 materias, 4 aulas, 5 edificios y 5 facultades.");
         }
         catch(SistemaAcademicoException e)
         {
@@ -173,7 +164,8 @@ public class Main
         System.out.println("--- ELIMINAR ESTUDIANTE ---");
         String id = Entrada.leerTexto("ID: ");
         Estudiante estudiante = universidad.buscarEstudiante(id);
-        if(!Entrada.confirmar("¿Seguro que desea eliminar a " + estudiante.getNombre() + "?"))
+        String respuesta = Entrada.leerTexto("¿Seguro que desea eliminar a " + estudiante.getNombre() + "? (s/n): ");
+        if(!respuesta.equalsIgnoreCase("s"))
         {
             System.out.println("Eliminación cancelada.");
             return;
@@ -259,7 +251,7 @@ public class Main
         int dia = leerDia();
         int hora = Entrada.leerEntero("Hora (0-23): ", 0, 23);
         int duracion = Entrada.leerEntero("Duración (horas): ");
-        String codigo = Entrada.leerTextoOpcional("Materia (Enter para ninguna): ");
+        String codigo = Entrada.leerTexto("Materia: ");
         System.out.println("Verificando disponibilidad...");
         System.out.println(universidad.buscarAula(aula).verificarDisponibilidad(dia, hora, duracion));
         universidad.reservarHorario(aula, dia, hora, duracion, codigo);

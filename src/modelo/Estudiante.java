@@ -4,7 +4,7 @@ import excepciones.DatoInvalidoException;
 import java.util.LinkedList;
 import java.util.Locale;
 
-/**
+/*
 estudiante, hereda de persona
 al lado va otra matriz con el codigo de cada materia para saber de que es cada nota
 se usa Double y no double para que una casilla vacia sea null (sin nota)

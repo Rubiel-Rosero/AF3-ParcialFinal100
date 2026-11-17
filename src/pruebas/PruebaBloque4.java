@@ -8,7 +8,7 @@ import modelo.Estudiante;
 import modelo.Materia;
 import modelo.Universidad;
 
-/**
+/*
 prueba del bloque 4: materias, prerrequisitos (lista enlazada) y cola de espera
 reproduciendo el ejemplo 2 del enunciado
 */
