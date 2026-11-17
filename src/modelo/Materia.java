@@ -1,12 +1,11 @@
 package modelo;
 
-import estructuras.Cola;
-import estructuras.ListaEnlazada;
-import estructuras.Nodo;
 import excepciones.ColaDeEsperaVaciaException;
 import excepciones.CupoLlenoException;
 import excepciones.DatoInvalidoException;
 import excepciones.PreRequisitoNoAprobadoException;
+import java.util.LinkedList;// la clase Queue es una interfaz y no se puede instanciar directamente, por eso se usa LinkedList
+import java.util.Queue;
 
 /**
 una materia con sus cupos, creditos, prerrequisitos, inscritos y cola de espera
@@ -17,9 +16,9 @@ public class Materia
     private String nombre;
     private int cuposMaximos;
     private int creditos;
-    private ListaEnlazada<Materia> prerrequisitos = new ListaEnlazada<>();
-    private ListaEnlazada<Estudiante> inscritos = new ListaEnlazada<>();
-    private Cola<Estudiante> colaEspera = new Cola<>();
+    private LinkedList<Materia> prerrequisitos = new LinkedList<>();
+    private LinkedList<Estudiante> inscritos = new LinkedList<>();
+    private Queue<Estudiante> colaEspera = new LinkedList<>();
     public Materia(String codigo, String nombre, int cuposMaximos, int creditos) throws DatoInvalidoException
     {
         if(codigo == null || codigo.trim().isEmpty())
@@ -53,25 +52,23 @@ public class Materia
         {
             throw new DatoInvalidoException("Una materia no puede ser prerrequisito de sí misma");
         }
-        if(prerrequisitos.contiene(prerrequisito))
+        if(prerrequisitos.contains(prerrequisito))
         {
             throw new DatoInvalidoException(prerrequisito.getCodigo() + " ya es prerrequisito de " + codigo);
         }
-        prerrequisitos.agregarAlFinal(prerrequisito);
+        prerrequisitos.addLast(prerrequisito);
     }
     //recorre la lista y junta las que el estudiante no ha aprobado
     public void verificarPrerrequisitos(Estudiante estudiante) throws PreRequisitoNoAprobadoException
     {
         String faltantes = "";
-        Nodo<Materia> actual = prerrequisitos.getPrimero();
-        while(actual != null)
+        for(Materia prerrequisito : prerrequisitos)
         {
-            String codigoPre = actual.getDato().getCodigo();
+            String codigoPre = prerrequisito.getCodigo();
             if(!estudiante.haAprobado(codigoPre))
             {
                 faltantes += (faltantes.isEmpty() ? "" : ", ") + codigoPre;
             }
-            actual = actual.getSiguiente();
         }
         if(!faltantes.isEmpty())
         {
@@ -80,16 +77,14 @@ public class Materia
     }
     public String mostrarPrerrequisitos()
     {
-        if(prerrequisitos.estaVacia())
+        if(prerrequisitos.isEmpty())
         {
             return codigo + " no tiene prerrequisitos";
         }
         String texto = "Prerrequisitos de " + codigo + ":";
-        Nodo<Materia> actual = prerrequisitos.getPrimero();
-        while(actual != null)
+        for(Materia prerrequisito : prerrequisitos)
         {
-            texto += "\n- " + actual.getDato();
-            actual = actual.getSiguiente();
+            texto += "\n- " + prerrequisito;
         }
         return texto;
     }
@@ -113,68 +108,57 @@ public class Materia
         {
             throw new CupoLlenoException(codigo + " no tiene cupos disponibles");
         }
-        inscritos.agregarAlFinal(estudiante);
+        inscritos.addLast(estudiante);
     }
     //se llama cuando inscribir lanzo CupoLlenoException
     public void agregarAColaEspera(Estudiante estudiante)
     {
-        colaEspera.encolar(estudiante);
+        colaEspera.offer(estudiante);
     }
     //saca al estudiante y si hay alguien esperando le da el cupo automaticamente
     //devuelve a quien se le asigno el cupo, o null si la cola estaba vacia
     public Estudiante cancelarInscripcion(Estudiante estudiante) throws DatoInvalidoException
     {
-        if(!inscritos.eliminar(estudiante))
+        if(!inscritos.remove(estudiante))
         {
             throw new DatoInvalidoException(estudiante.getNombre() + " no está inscrito en " + codigo);
         }
-        if(colaEspera.estaVacia())
+        if(colaEspera.isEmpty())
         {
             return null;
         }
-        Estudiante siguiente = colaEspera.desencolar();
-        inscritos.agregarAlFinal(siguiente);
+        Estudiante siguiente = colaEspera.poll(); // Remueve el primero de la cola
+        inscritos.addLast(siguiente);
         return siguiente;
     }
     public boolean estaInscrito(Estudiante estudiante)
     {
-        return inscritos.contiene(estudiante);
+        return inscritos.contains(estudiante);
     }
-    //la cola no tiene contiene(), entonces se recorre desde el frente sin sacar a nadie
+    //busca en la cola sin sacar a nadie
     public boolean estaEnEspera(Estudiante estudiante)
     {
-        Nodo<Estudiante> actual = colaEspera.getPrimero();
-        while(actual != null)
-        {
-            if(actual.getDato() == estudiante)
-            {
-                return true;
-            }
-            actual = actual.getSiguiente();
-        }
-        return false;
+        return colaEspera.contains(estudiante);
     }
     //como en el ejemplo 2: Posicion 1: Laura Diaz ...
     public String mostrarColaEspera() throws ColaDeEsperaVaciaException
     {
-        if(colaEspera.estaVacia())
+        if(colaEspera.isEmpty())
         {
             throw new ColaDeEsperaVaciaException("No hay estudiantes en espera para " + codigo);
         }
         String texto = "Materia: " + this;
         int posicion = 1;
-        Nodo<Estudiante> actual = colaEspera.getPrimero();
-        while(actual != null)
+        for(Estudiante estudiante : colaEspera)
         {
-            texto += "\nPosición " + posicion + ": " + actual.getDato().getNombre();
+            texto += "\nPosición " + posicion + ": " + estudiante.getNombre();
             posicion++;
-            actual = actual.getSiguiente();
         }
-        return texto + "\nTotal en espera: " + colaEspera.tamanio();
+        return texto + "\nTotal en espera: " + colaEspera.size();
     }
     public int getCuposDisponibles()
     {
-        return cuposMaximos - inscritos.tamanio();
+        return cuposMaximos - inscritos.size();
     }
     public String getCodigo()
     {
@@ -192,15 +176,15 @@ public class Materia
     {
         return creditos;
     }
-    public ListaEnlazada<Materia> getPrerrequisitos()
+    public LinkedList<Materia> getPrerrequisitos()
     {
         return prerrequisitos;
     }
-    public ListaEnlazada<Estudiante> getInscritos()
+    public LinkedList<Estudiante> getInscritos()
     {
         return inscritos;
     }
-    public Cola<Estudiante> getColaEspera()
+    public Queue<Estudiante> getColaEspera()
     {
         return colaEspera;
     }

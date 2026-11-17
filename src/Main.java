@@ -219,7 +219,7 @@ public class Main
         }
         else
         {
-            System.out.println("Materia llena. Agregado a COLA DE ESPERA (posición " + materia.getColaEspera().tamanio() + ")");
+            System.out.println("Materia llena. Agregado a COLA DE ESPERA (posición " + materia.getColaEspera().size() + ")");
         }
     }
     private static void cancelarInscripcion() throws SistemaAcademicoException

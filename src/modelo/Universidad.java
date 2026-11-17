@@ -1,6 +1,5 @@
 package modelo;
 
-import estructuras.Nodo;
 import excepciones.CupoLlenoException;
 import excepciones.DatoInvalidoException;
 import excepciones.EstudianteNoEncontradoException;
@@ -172,14 +171,9 @@ public class Universidad
         String texto = "";
         for(Materia m : listarMaterias())
         {
-            Nodo<Estudiante> actual = m.getInscritos().getPrimero();
-            while(actual != null)
+            if(m.getInscritos().contains(estudiante))
             {
-                if(actual.getDato() == estudiante)
-                {
-                    texto += m + "\n";
-                }
-                actual = actual.getSiguiente();
+                texto += m + "\n";
             }
         }
         return texto.isEmpty() ? estudiante.getNombre() + " no tiene materias inscritas" : texto.trim();

@@ -40,7 +40,7 @@ public class PruebaBloque4
         u.agregarPrerrequisito("CALC102", "CALC101");
         u.agregarPrerrequisito("CALC102", "FIS101");
         System.out.println(u.buscarMateria("CALC102").mostrarPrerrequisitos());
-        verificar("CALC102 tiene 2 prerrequisitos", u.buscarMateria("CALC102").getPrerrequisitos().tamanio(), 2);
+        verificar("CALC102 tiene 2 prerrequisitos", u.buscarMateria("CALC102").getPrerrequisitos().size(), 2);
         verificar("no repetir prerrequisito", lanzaDato(() -> u.agregarPrerrequisito("CALC102", "CALC101")), true);
         verificar("no ser prerrequisito de si misma", lanzaDato(() -> u.agregarPrerrequisito("CALC101", "CALC101")), true);
         //Ana aprobo CALC101 pero no ha visto FIS101
@@ -77,9 +77,9 @@ public class PruebaBloque4
                 System.out.println((i + 1) + ". " + nombre + " -> Materia llena. Agregada a COLA DE ESPERA");
             }
         }
-        verificar("3 inscritos", calculo.getInscritos().tamanio(), 3);
-        verificar("2 en espera", calculo.getColaEspera().tamanio(), 2);
-        verificar("Laura esta de primera", calculo.getColaEspera().verFrente().getNombre(), "Laura Diaz");
+        verificar("3 inscritos", calculo.getInscritos().size(), 3);
+        verificar("2 en espera", calculo.getColaEspera().size(), 2);
+        verificar("Laura esta de primera", calculo.getColaEspera().peek().getNombre(), "Laura Diaz");
         verificar("encolar dos veces a Laura", lanzaDato(() -> u.inscribirEstudiante("2024005", "CALC101")), true);
         System.out.println("--- MOSTRAR COLA DE ESPERA ---\n" + calculo.mostrarColaEspera());
 
@@ -90,8 +90,8 @@ public class PruebaBloque4
         verificar("el cupo es para Laura", asignado.getNombre(), "Laura Diaz");
         verificar("Laura ya esta inscrita", calculo.estaInscrito(asignado), true);
         verificar("Juan ya no esta", calculo.estaInscrito(u.buscarEstudiante("2024002")), false);
-        verificar("siguen 3 inscritos", calculo.getInscritos().tamanio(), 3);
-        verificar("en espera queda solo Pablo", calculo.getColaEspera().verFrente().getNombre(), "Pablo Ortiz");
+        verificar("siguen 3 inscritos", calculo.getInscritos().size(), 3);
+        verificar("en espera queda solo Pablo", calculo.getColaEspera().peek().getNombre(), "Pablo Ortiz");
         verificar("cancelar a alguien no inscrito", lanzaDato(() -> u.cancelarInscripcion("2024002", "CALC101")), true);
         u.cancelarInscripcion("2024003", "CALC101"); //entra Pablo
         Estudiante nadie = u.cancelarInscripcion("2024004", "CALC101"); //la cola ya esta vacia

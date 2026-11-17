@@ -1,7 +1,7 @@
 package modelo;
 
-import estructuras.Pila;
 import excepciones.DatoInvalidoException;
+import java.util.Stack;
 
 /**
 el mapa del campus como grafo no dirigido
@@ -175,20 +175,20 @@ public class Campus
     //llevar del destino hacia atras entonces se apila y al desapilar sale en el orden correcto
     private Ruta armarRuta(int[] anterior, int destino, int total)
     {
-        Pila<Integer> pila = new Pila<>();
+        Stack<Integer> pila = new Stack<>();
         int actual = destino;
         while(actual != -1)
         {
-            pila.apilar(actual);
+            pila.push(actual);
             actual = anterior[actual];
         }
-        int cantidad = pila.tamanio();
+        int cantidad = pila.size();
         String[] edificios = new String[cantidad];
         int[] tramos = new int[cantidad - 1];
         int previo = -1;
         for(int i = 0; i < cantidad; i++)
         {
-            int edificio = pila.desapilar();
+            int edificio = pila.pop();
             edificios[i] = nombres[edificio];
             if(previo != -1)
             {

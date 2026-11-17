@@ -1,7 +1,7 @@
 package modelo;
 
-import estructuras.ListaEnlazada;
 import excepciones.DatoInvalidoException;
+import java.util.LinkedList;
 import java.util.Locale;
 
 /**
@@ -16,7 +16,7 @@ public class Estudiante extends Persona
     private int semestre;
     private Double[][] notas = new Double[MAX_SEMESTRES][MAX_MATERIAS];
     private String[][] codigosMaterias = new String[MAX_SEMESTRES][MAX_MATERIAS];
-    private ListaEnlazada<String> historialMaterias = new ListaEnlazada<>();
+    private LinkedList<String> historialMaterias = new LinkedList<>();
     public Estudiante(String id, String nombre, String email, int semestre) throws DatoInvalidoException
     {
         super(id, nombre, email);
@@ -61,7 +61,7 @@ public class Estudiante extends Persona
                 throw new DatoInvalidoException("El semestre " + semestre + " ya tiene " + MAX_MATERIAS + " materias");
             }
             codigosMaterias[fila][columna] = codigoMateria;
-            historialMaterias.agregarAlFinal(codigoMateria);
+            historialMaterias.addLast(codigoMateria);
         }
         Double anterior = notas[fila][columna];
         notas[fila][columna] = nota;
@@ -77,7 +77,7 @@ public class Estudiante extends Persona
         {
             notas[fila][columna] = null;
             codigosMaterias[fila][columna] = null;
-            historialMaterias.eliminar(codigoMateria);
+            historialMaterias.remove(codigoMateria);
         }
     }
     //promedio de un semestre (sobrecarga: mismo nombre, recibe un parametro)
@@ -197,7 +197,7 @@ public class Estudiante extends Persona
     {
         return codigosMaterias[semestre - 1][columna];
     }
-    public ListaEnlazada<String> getHistorialMaterias()
+    public LinkedList<String> getHistorialMaterias()
     {
         return historialMaterias;
     }

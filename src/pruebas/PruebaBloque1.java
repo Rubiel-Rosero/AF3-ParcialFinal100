@@ -1,12 +1,13 @@
 package pruebas;
 
-import estructuras.Cola;
-import estructuras.ListaEnlazada;
-import estructuras.Nodo;
-import estructuras.Pila;
+import java.util.EmptyStackException;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
 
 /**
-prueba del bloque 1: nodo, lista enlazada, pila y cola
+prueba del bloque 1: las estructuras de java.util que usa el sistema
+LinkedList (inscritos, prerrequisitos, historial), Stack (ruta de Dijkstra) y Queue (cola de espera)
 cada verificar compara lo que da el metodo con lo que deberia dar
 */
 public class PruebaBloque1
@@ -15,69 +16,46 @@ public class PruebaBloque1
     private static int total = 0;
     public static void main(String[] args)
     {
-        System.out.println("=== Nodo ===");
-        probarNodo();
-        System.out.println("\n=== Lista enlazada ===");
+        System.out.println("=== LinkedList ===");
         probarLista();
-        System.out.println("\n=== Pila ===");
+        System.out.println("\n=== Stack ===");
         probarPila();
-        System.out.println("\n=== Cola ===");
+        System.out.println("\n=== Queue ===");
         probarCola();
         System.out.println("\nResultado: " + aprobadas + "/" + total);
     }
-    //enlazar 3 nodos a mano y recorrerlos
-    private static void probarNodo()
-    {
-        Nodo<String> n1 = new Nodo<>("CALC101");
-        Nodo<String> n2 = new Nodo<>("FIS101");
-        Nodo<String> n3 = new Nodo<>("PROG101");
-        n1.setSiguiente(n2);
-        n2.setSiguiente(n3);
-        String recorrido = "";
-        Nodo<String> actual = n1;
-        while(actual != null)
-        {
-            recorrido += actual.getDato() + " ";
-            actual = actual.getSiguiente();
-        }
-        verificar("recorrer 3 nodos", recorrido.trim(), "CALC101 FIS101 PROG101");
-    }
     private static void probarLista()
     {
-        ListaEnlazada<String> lista = new ListaEnlazada<>();
-        verificar("lista nueva vacia", lista.estaVacia(), true);
-        lista.agregarAlFinal("B");
-        lista.agregarAlFinal("C");
-        lista.agregarAlInicio("A");
-        lista.agregarAlFinal("D");
-        verificar("agregar al inicio y al final", lista.toString(), "[A -> B -> C -> D]");
-        verificar("tamanio", lista.tamanio(), 4);
-        verificar("obtener posicion 2", lista.obtener(2), "C");
-        verificar("contiene C", lista.contiene("C"), true);
-        verificar("no contiene Z", lista.contiene("Z"), false);
-        //los 3 casos de eliminar
-        lista.eliminar("B");
-        verificar("eliminar del medio", lista.toString(), "[A -> C -> D]");
-        lista.eliminar("A");
-        verificar("eliminar el primero", lista.toString(), "[C -> D]");
-        lista.eliminar("D");
-        verificar("eliminar el ultimo", lista.toString(), "[C]");
-        lista.agregarAlFinal("E");
-        verificar("agregar despues de borrar el ultimo", lista.toString(), "[C -> E]");
-        verificar("eliminar algo que no esta", lista.eliminar("Z"), false);
-        //recorrer desde afuera
+        LinkedList<String> lista = new LinkedList<>();
+        verificar("lista nueva vacia", lista.isEmpty(), true);
+        lista.addLast("B");
+        lista.addLast("C");
+        lista.addFirst("A");
+        lista.addLast("D");
+        verificar("agregar al inicio y al final", lista.toString(), "[A, B, C, D]");
+        verificar("size", lista.size(), 4);
+        verificar("get posicion 2", lista.get(2), "C");
+        verificar("contains C", lista.contains("C"), true);
+        verificar("no contains Z", lista.contains("Z"), false);
+        lista.remove("B");
+        verificar("remove del medio", lista.toString(), "[A, C, D]");
+        lista.remove("A");
+        verificar("remove el primero", lista.toString(), "[C, D]");
+        lista.remove("D");
+        verificar("remove el ultimo", lista.toString(), "[C]");
+        lista.addLast("E");
+        verificar("addLast despues de borrar el ultimo", lista.toString(), "[C, E]");
+        verificar("remove algo que no esta", lista.remove("Z"), false);
         String recorrido = "";
-        Nodo<String> actual = lista.getPrimero();
-        while(actual != null)
+        for(String s : lista)
         {
-            recorrido += actual.getDato();
-            actual = actual.getSiguiente();
+            recorrido += s;
         }
-        verificar("recorrer con getPrimero", recorrido, "CE");
+        verificar("recorrer con for-each", recorrido, "CE");
         boolean fallo = false;
         try
         {
-            lista.obtener(10);
+            lista.get(10);
         }
         catch(IndexOutOfBoundsException e)
         {
@@ -85,68 +63,58 @@ public class PruebaBloque1
         }
         verificar("posicion invalida lanza excepcion", fallo, true);
     }
+    //LIFO: el ultimo que entra es el primero que sale
     private static void probarPila()
     {
-        Pila<String> pila = new Pila<>();
-        pila.apilar("op1");
-        pila.apilar("op2");
-        pila.apilar("op3");
-        verificar("tope es el ultimo", pila.verTope(), "op3");
-        verificar("tamanio", pila.tamanio(), 3);
-        verificar("desapilar 1", pila.desapilar(), "op3");
-        verificar("desapilar 2", pila.desapilar(), "op2");
-        verificar("desapilar 3", pila.desapilar(), "op1");
-        verificar("queda vacia", pila.estaVacia(), true);
+        Stack<String> pila = new Stack<>();
+        pila.push("op1");
+        pila.push("op2");
+        pila.push("op3");
+        verificar("peek es el ultimo", pila.peek(), "op3");
+        verificar("size", pila.size(), 3);
+        verificar("pop 1", pila.pop(), "op3");
+        verificar("pop 2", pila.pop(), "op2");
+        verificar("pop 3", pila.pop(), "op1");
+        verificar("queda vacia", pila.isEmpty(), true);
         boolean fallo = false;
         try
         {
-            pila.desapilar();
+            pila.pop();
         }
-        catch(IllegalStateException e)
+        catch(EmptyStackException e)
         {
             fallo = true;
         }
-        verificar("desapilar vacia lanza excepcion", fallo, true);
-        pila.apilar("x");
-        pila.vaciar();
-        verificar("vaciar", pila.estaVacia(), true);
+        verificar("pop vacia lanza EmptyStackException", fallo, true);
+        pila.push("x");
+        pila.clear();
+        verificar("clear", pila.isEmpty(), true);
     }
+    //FIFO: el primero que llega es el primero que sale
     private static void probarCola()
     {
-        Cola<String> cola = new Cola<>();
-        cola.encolar("Laura Diaz");
-        cola.encolar("Pablo Ortiz");
-        cola.encolar("Sofia Mora");
-        verificar("frente es el primero que llego", cola.verFrente(), "Laura Diaz");
-        //mostrar la cola sin sacar a nadie
+        Queue<String> cola = new LinkedList<>();
+        cola.offer("Laura Diaz");
+        cola.offer("Pablo Ortiz");
+        cola.offer("Sofia Mora");
+        verificar("peek es el primero que llego", cola.peek(), "Laura Diaz");
         String posiciones = "";
         int posicion = 1;
-        Nodo<String> actual = cola.getPrimero();
-        while(actual != null)
+        for(String s : cola)
         {
-            posiciones += posicion + ":" + actual.getDato() + " ";
+            posiciones += posicion + ":" + s + " ";
             posicion++;
-            actual = actual.getSiguiente();
         }
         verificar("recorrer sin sacar", posiciones.trim(), "1:Laura Diaz 2:Pablo Ortiz 3:Sofia Mora");
-        verificar("recorrer no cambia el tamanio", cola.tamanio(), 3);
-        verificar("desencolar 1", cola.desencolar(), "Laura Diaz");
-        verificar("desencolar 2", cola.desencolar(), "Pablo Ortiz");
-        verificar("desencolar 3", cola.desencolar(), "Sofia Mora");
-        verificar("queda vacia", cola.estaVacia(), true);
-        cola.encolar("Nuevo");
-        verificar("encolar despues de vaciarse", cola.verFrente(), "Nuevo");
-        cola.desencolar();
-        boolean fallo = false;
-        try
-        {
-            cola.desencolar();
-        }
-        catch(IllegalStateException e)
-        {
-            fallo = true;
-        }
-        verificar("desencolar vacia lanza excepcion", fallo, true);
+        verificar("recorrer no cambia el size", cola.size(), 3);
+        verificar("poll 1", cola.poll(), "Laura Diaz");
+        verificar("poll 2", cola.poll(), "Pablo Ortiz");
+        verificar("poll 3", cola.poll(), "Sofia Mora");
+        verificar("queda vacia", cola.isEmpty(), true);
+        cola.offer("Nuevo");
+        verificar("offer despues de vaciarse", cola.peek(), "Nuevo");
+        cola.poll();
+        verificar("poll en cola vacia devuelve null", cola.poll() == null, true);
     }
     private static void verificar(String que, Object obtenido, Object esperado)
     {

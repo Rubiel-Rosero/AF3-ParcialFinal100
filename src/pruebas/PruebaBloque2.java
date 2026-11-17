@@ -66,16 +66,16 @@ public class PruebaBloque2
         verificar("aprobo CALC101", ana.haAprobado("CALC101"), true);
         verificar("no aprobo FIS101 (2.8)", ana.haAprobado("FIS101"), false);
         verificar("no ha visto ALG200", ana.haAprobado("ALG200"), false);
-        verificar("historial tiene 6 materias", ana.getHistorialMaterias().tamanio(), 6);
+        verificar("historial tiene 6 materias", ana.getHistorialMaterias().size(), 6);
         //cambiar una nota devuelve la anterior (para deshacer)
         Double anterior = ana.registrarNota(1, "FIS101", 3.2);
         verificar("cambiar nota devuelve la anterior", anterior, 2.8);
         verificar("ahora si aprobo FIS101", ana.haAprobado("FIS101"), true);
-        verificar("cambiar nota no repite en historial", ana.getHistorialMaterias().tamanio(), 6);
+        verificar("cambiar nota no repite en historial", ana.getHistorialMaterias().size(), 6);
         Double primera = ana.registrarNota(3, "EST201", 4.0);
         verificar("nota nueva devuelve null", primera == null, true);
         ana.borrarNota(3, "EST201");
-        verificar("borrarNota la quita del historial", ana.getHistorialMaterias().contiene("EST201"), false);
+        verificar("borrarNota la quita del historial", ana.getHistorialMaterias().contains("EST201"), false);
         //llenar un semestre completo
         Estudiante lleno = new Estudiante("X1", "Lleno", "x@u.edu", 1);
         for(int j = 0; j < Estudiante.MAX_MATERIAS; j++)
